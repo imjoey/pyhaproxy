@@ -1,0 +1,2 @@
+grammar Words
+  root  <-  first:"foo" second:"bar" <Extension>

@@ -13,143 +13,143 @@ class TreeNode(object):
             yield el
 
 
-class TreeNode1(TreeNode):
+class GlobalSection(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode1, self).__init__(text, offset, elements)
+        super(GlobalSection, self).__init__(text, offset, elements)
         self.global_header = elements[0]
         self.config_block = elements[1]
 
 
-class TreeNode2(TreeNode):
+class DefaultsSection(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode2, self).__init__(text, offset, elements)
+        super(DefaultsSection, self).__init__(text, offset, elements)
         self.defaults_header = elements[0]
         self.config_block = elements[1]
 
 
-class TreeNode3(TreeNode):
+class UserlistSection(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode3, self).__init__(text, offset, elements)
+        super(UserlistSection, self).__init__(text, offset, elements)
         self.userlist_header = elements[0]
         self.config_block = elements[1]
 
 
-class TreeNode4(TreeNode):
+class ListenSection(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode4, self).__init__(text, offset, elements)
+        super(ListenSection, self).__init__(text, offset, elements)
         self.listen_header = elements[0]
         self.config_block = elements[1]
 
 
-class TreeNode5(TreeNode):
+class FrontendSection(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode5, self).__init__(text, offset, elements)
+        super(FrontendSection, self).__init__(text, offset, elements)
         self.frontend_header = elements[0]
         self.config_block = elements[1]
 
 
-class TreeNode6(TreeNode):
+class BackendSection(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode6, self).__init__(text, offset, elements)
+        super(BackendSection, self).__init__(text, offset, elements)
         self.backend_header = elements[0]
         self.config_block = elements[1]
 
 
-class TreeNode7(TreeNode):
+class GloalHeader(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode7, self).__init__(text, offset, elements)
+        super(GloalHeader, self).__init__(text, offset, elements)
         self.whitespace = elements[2]
         self.line_break = elements[4]
 
 
-class TreeNode8(TreeNode):
+class UserlistHeader(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode8, self).__init__(text, offset, elements)
+        super(UserlistHeader, self).__init__(text, offset, elements)
         self.whitespace = elements[2]
         self.proxy_name = elements[3]
         self.line_break = elements[5]
 
 
-class TreeNode9(TreeNode):
+class DefaultsHeader(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode9, self).__init__(text, offset, elements)
+        super(DefaultsHeader, self).__init__(text, offset, elements)
         self.whitespace = elements[4]
         self.line_break = elements[6]
 
 
-class TreeNode10(TreeNode):
+class ListenHeader(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode10, self).__init__(text, offset, elements)
+        super(ListenHeader, self).__init__(text, offset, elements)
         self.whitespace = elements[4]
         self.proxy_name = elements[3]
         self.line_break = elements[8]
 
 
-class TreeNode11(TreeNode):
+class FrontendHeader(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode11, self).__init__(text, offset, elements)
+        super(FrontendHeader, self).__init__(text, offset, elements)
         self.whitespace = elements[4]
         self.proxy_name = elements[3]
         self.line_break = elements[8]
 
 
-class TreeNode12(TreeNode):
+class BackendHeader(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode12, self).__init__(text, offset, elements)
+        super(BackendHeader, self).__init__(text, offset, elements)
         self.whitespace = elements[4]
         self.proxy_name = elements[3]
         self.line_break = elements[7]
 
 
-class TreeNode13(TreeNode):
+class ServerLine(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode13, self).__init__(text, offset, elements)
+        super(ServerLine, self).__init__(text, offset, elements)
         self.whitespace = elements[4]
         self.server_name = elements[3]
         self.service_address = elements[5]
         self.line_break = elements[8]
 
 
-class TreeNode14(TreeNode):
+class OptionLine(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode14, self).__init__(text, offset, elements)
+        super(OptionLine, self).__init__(text, offset, elements)
         self.whitespace = elements[4]
         self.keyword = elements[3]
         self.line_break = elements[7]
 
 
-class TreeNode15(TreeNode):
+class ConfigLine(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode15, self).__init__(text, offset, elements)
+        super(ConfigLine, self).__init__(text, offset, elements)
         self.whitespace = elements[3]
         self.keyword = elements[2]
         self.line_break = elements[6]
 
 
-class TreeNode16(TreeNode):
+class CommentLine(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode16, self).__init__(text, offset, elements)
+        super(CommentLine, self).__init__(text, offset, elements)
         self.whitespace = elements[0]
         self.comment_text = elements[1]
         self.line_break = elements[2]
 
 
-class TreeNode17(TreeNode):
+class BlankLine(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode17, self).__init__(text, offset, elements)
+        super(BlankLine, self).__init__(text, offset, elements)
         self.whitespace = elements[0]
         self.line_break = elements[1]
 
 
-class TreeNode18(TreeNode):
+class Keyword(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode18, self).__init__(text, offset, elements)
+        super(Keyword, self).__init__(text, offset, elements)
         self.whitespace = elements[1]
 
 
-class TreeNode19(TreeNode):
+class ServiceAddress(TreeNode):
     def __init__(self, text, offset, elements):
-        super(TreeNode19, self).__init__(text, offset, elements)
+        super(ServiceAddress, self).__init__(text, offset, elements)
         self.host = elements[0]
         self.port = elements[2]
 
@@ -218,8 +218,6 @@ class Grammar(object):
             self._offset = self._offset
         else:
             address0 = FAILURE
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ConfigrationFile', (cls0, self._types.ConfigrationFile), {})
         self._cache['configuration'][index0] = (address0, self._offset)
         return address0
 
@@ -247,10 +245,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode1(self._input[index1:self._offset], index1, elements0)
+            address0 = GlobalSection(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'GlobalSection', (cls0, self._types.GlobalSection), {})
         self._cache['global_section'][index0] = (address0, self._offset)
         return address0
 
@@ -278,10 +274,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode2(self._input[index1:self._offset], index1, elements0)
+            address0 = DefaultsSection(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'DefaultsSection', (cls0, self._types.DefaultsSection), {})
         self._cache['defaults_section'][index0] = (address0, self._offset)
         return address0
 
@@ -309,10 +303,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode3(self._input[index1:self._offset], index1, elements0)
+            address0 = UserlistSection(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'UserlistSection', (cls0, self._types.UserlistSection), {})
         self._cache['userlist_section'][index0] = (address0, self._offset)
         return address0
 
@@ -340,10 +332,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode4(self._input[index1:self._offset], index1, elements0)
+            address0 = ListenSection(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ListenSection', (cls0, self._types.ListenSection), {})
         self._cache['listen_section'][index0] = (address0, self._offset)
         return address0
 
@@ -371,10 +361,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode5(self._input[index1:self._offset], index1, elements0)
+            address0 = FrontendSection(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'FrontendSection', (cls0, self._types.FrontendSection), {})
         self._cache['frontend_section'][index0] = (address0, self._offset)
         return address0
 
@@ -402,10 +390,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode6(self._input[index1:self._offset], index1, elements0)
+            address0 = BackendSection(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'BackendSection', (cls0, self._types.BackendSection), {})
         self._cache['backend_section'][index0] = (address0, self._offset)
         return address0
 
@@ -470,10 +456,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode7(self._input[index1:self._offset], index1, elements0)
+            address0 = GloalHeader(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'GlobalHeader', (cls0, self._types.GlobalHeader), {})
         self._cache['global_header'][index0] = (address0, self._offset)
         return address0
 
@@ -545,10 +529,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode8(self._input[index1:self._offset], index1, elements0)
+            address0 = UserlistHeader(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'UserlistHeader', (cls0, self._types.UserlistHeader), {})
         self._cache['userlist_header'][index0] = (address0, self._offset)
         return address0
 
@@ -631,10 +613,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode9(self._input[index1:self._offset], index1, elements0)
+            address0 = DefaultsHeader(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'DefaultsHeader', (cls0, self._types.DefaultsHeader), {})
         self._cache['defaults_header'][index0] = (address0, self._offset)
         return address0
 
@@ -735,10 +715,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode10(self._input[index1:self._offset], index1, elements0)
+            address0 = ListenHeader(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ListenHeader', (cls0, self._types.ListenHeader), {})
         self._cache['listen_header'][index0] = (address0, self._offset)
         return address0
 
@@ -791,7 +769,7 @@ class Grammar(object):
                                 elements0.append(address6)
                                 address7 = FAILURE
                                 index3 = self._offset
-                                address7 = self._read_values()
+                                address7 = self._read_value()
                                 if address7 is FAILURE:
                                     address7 = TreeNode(self._input[index3:index3], index3)
                                     self._offset = index3
@@ -839,10 +817,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode11(self._input[index1:self._offset], index1, elements0)
+            address0 = FrontendHeader(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'FrontendHeader', (cls0, self._types.FrontendHeader), {})
         self._cache['frontend_header'][index0] = (address0, self._offset)
         return address0
 
@@ -932,10 +908,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode12(self._input[index1:self._offset], index1, elements0)
+            address0 = BackendHeader(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'BackendHeader', (cls0, self._types.BackendHeader), {})
         self._cache['backend_header'][index0] = (address0, self._offset)
         return address0
 
@@ -971,8 +945,6 @@ class Grammar(object):
             self._offset = self._offset
         else:
             address0 = FAILURE
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ConfigBlock', (cls0, self._types.ConfigBlock), {})
         self._cache['config_block'][index0] = (address0, self._offset)
         return address0
 
@@ -1069,10 +1041,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode13(self._input[index1:self._offset], index1, elements0)
+            address0 = ServerLine(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ServerLine', (cls0, self._types.ServerLine), {})
         self._cache['server_line'][index0] = (address0, self._offset)
         return address0
 
@@ -1162,10 +1132,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode14(self._input[index1:self._offset], index1, elements0)
+            address0 = OptionLine(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'OptionLine', (cls0, self._types.OptionLine), {})
         self._cache['option_line'][index0] = (address0, self._offset)
         return address0
 
@@ -1318,10 +1286,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode15(self._input[index1:self._offset], index1, elements0)
+            address0 = ConfigLine(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ConfigLine', (cls0, self._types.ConfigLine), {})
         self._cache['config_line'][index0] = (address0, self._offset)
         return address0
 
@@ -1356,10 +1322,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode16(self._input[index1:self._offset], index1, elements0)
+            address0 = CommentLine(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'CommentLine', (cls0, self._types.CommentLine), {})
         self._cache['comment_line'][index0] = (address0, self._offset)
         return address0
 
@@ -1387,10 +1351,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode17(self._input[index1:self._offset], index1, elements0)
+            address0 = BlankLine(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'BlankLine', (cls0, self._types.BlankLine), {})
         self._cache['blank_line'][index0] = (address0, self._offset)
         return address0
 
@@ -1456,8 +1418,6 @@ class Grammar(object):
         else:
             address0 = TreeNode(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'CommentText', (cls0, self._types.CommentText), {})
         self._cache['comment_text'][index0] = (address0, self._offset)
         return address0
 
@@ -1480,8 +1440,6 @@ class Grammar(object):
                 self._expected = []
             if self._offset == self._failure:
                 self._expected.append('[\\n]')
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'LineBreak', (cls0, self._types.LineBreak), {})
         self._cache['line_break'][index0] = (address0, self._offset)
         return address0
 
@@ -1542,7 +1500,7 @@ class Grammar(object):
         if elements1 is None:
             address1 = FAILURE
         else:
-            address1 = TreeNode18(self._input[index3:self._offset], index3, elements1)
+            address1 = Keyword(self._input[index3:self._offset], index3, elements1)
             self._offset = self._offset
         if address1 is FAILURE:
             address1 = TreeNode(self._input[index2:index2], index2)
@@ -1586,8 +1544,6 @@ class Grammar(object):
         else:
             address0 = TreeNode(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'Keyword', (cls0, self._types.Keyword), {})
         self._cache['keyword'][index0] = (address0, self._offset)
         return address0
 
@@ -1620,8 +1576,6 @@ class Grammar(object):
             self._offset = self._offset
         else:
             address0 = FAILURE
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ServerName', (cls0, self._types.ServerName), {})
         self._cache['server_name'][index0] = (address0, self._offset)
         return address0
 
@@ -1672,10 +1626,8 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = TreeNode19(self._input[index1:self._offset], index1, elements0)
+            address0 = ServiceAddress(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ServiceAddress', (cls0, self._types.ServiceAddress), {})
         self._cache['service_address'][index0] = (address0, self._offset)
         return address0
 
@@ -1727,8 +1679,6 @@ class Grammar(object):
             self._offset = self._offset
         else:
             address0 = FAILURE
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'Port', (cls0, self._types.Port), {})
         self._cache['port'][index0] = (address0, self._offset)
         return address0
 
@@ -1917,8 +1867,6 @@ class Grammar(object):
         else:
             address0 = TreeNode(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'Host', (cls0, self._types.Host), {})
         self._cache['ipv4_host'][index0] = (address0, self._offset)
         return address0
 
@@ -1951,8 +1899,6 @@ class Grammar(object):
             self._offset = self._offset
         else:
             address0 = FAILURE
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'Host', (cls0, self._types.Host), {})
         self._cache['dns_host'][index0] = (address0, self._offset)
         return address0
 
@@ -1975,8 +1921,6 @@ class Grammar(object):
                 self._expected = []
             if self._offset == self._failure:
                 self._expected.append('"*"')
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'Host', (cls0, self._types.Host), {})
         self._cache['wildcard_host'][index0] = (address0, self._offset)
         return address0
 
@@ -2009,8 +1953,6 @@ class Grammar(object):
             self._offset = self._offset
         else:
             address0 = FAILURE
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'ProxyName', (cls0, self._types.ProxyName), {})
         self._cache['proxy_name'][index0] = (address0, self._offset)
         return address0
 
@@ -2043,8 +1985,6 @@ class Grammar(object):
             self._offset = self._offset
         else:
             address0 = FAILURE
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'Value', (cls0, self._types.Value), {})
         self._cache['value'][index0] = (address0, self._offset)
         return address0
 
@@ -2102,8 +2042,6 @@ class Grammar(object):
         else:
             address0 = TreeNode(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'Char', (cls0, self._types.Char), {})
         self._cache['char'][index0] = (address0, self._offset)
         return address0
 
@@ -2136,8 +2074,6 @@ class Grammar(object):
             self._offset = self._offset
         else:
             address0 = FAILURE
-        cls0 = type(address0)
-        address0.__class__ = type(cls0.__name__ + 'Whitespace', (cls0, self._types.Whitespace), {})
         self._cache['whitespace'][index0] = (address0, self._offset)
         return address0
 

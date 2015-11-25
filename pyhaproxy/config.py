@@ -43,8 +43,15 @@ class Configration(object):
 
 
 class Global(object):
-    def __init__(self, configs):
+    """Represens a `global` section
+
+    Attributes:
+        configs (list): config list
+        options (list): option list
+    """
+    def __init__(self, configs, options):
         self.configs = configs
+        self.options = options
 
 
 class Default(object):
@@ -58,7 +65,7 @@ class HasServer(object):
 
     def add_server(self, name, host, port, attributes):
         server = Server(name, host, port, attributes)
-        self.servers.add(server)
+        self.servers.append(server)
 
 
 class Backend(HasServer):

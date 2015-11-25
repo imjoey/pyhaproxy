@@ -1,17 +1,25 @@
 #!/usr/bin/env
 # -*- coding: utf-8 -*-
 
-import parse
-
 
 class Configration(object):
+    """Represents a whole haproxy config file
+
+    Attributes:
+        backends (list): the `backend` sections
+        defaults (list): the `defaults` sections
+        frontends (list): the `frontend` sections
+        globall (config.Global): the `global` section
+        listens (list): the `listen` sections
+        pegtree (TYPE): the original parsing pegtree
+    """
     def __init__(self, pegtree):
         self.pegtree = pegtree
         self.defaults = []
         self.backends = []
         self.frontends = []
         self.listens = []
-        self.globall = {}
+        self.globall = None
 
     def listen(self, name):
         for listen in self.listens:
@@ -66,9 +74,6 @@ class Backend(HasServer):
 
 
 class Listen(HasServer):
-    '''
-        `listen` section
-    '''
     def __init__(self, name, host, port, options, configs):
         super(Listen, self).__init__()
         self.name = name

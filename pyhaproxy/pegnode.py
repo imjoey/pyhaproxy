@@ -3,6 +3,13 @@ import re
 
 
 class TreeNode(object):
+    """BNF tree node object
+
+    Attributes:
+        elements (list): treenodes after parsing
+        offset (int): the offset of the treenode
+        text (str): treenode text content
+    """
     def __init__(self, text, offset, elements=None):
         self.text = text
         self.offset = offset

@@ -1,67 +1,67 @@
 grammar HaproxyConfig
 
-configuration       <-      (comment_line / blank_line / global_section / defaults_section / userlist_section / listen_section / frontend_section / backend_section)* <ConfigrationFile>
+configuration       <-      (comment_line / blank_line / global_section / defaults_section / userlist_section / listen_section / frontend_section / backend_section)*
 
-global_section      <-      global_header config_block <GlobalSection>
+global_section      <-      global_header config_block
 
-defaults_section    <-      defaults_header config_block <DefaultsSection>
+defaults_section    <-      defaults_header config_block
 
-userlist_section    <-      userlist_header config_block <UserlistSection>
+userlist_section    <-      userlist_header config_block
 
-listen_section      <-      listen_header config_block <ListenSection>
+listen_section      <-      listen_header config_block
 
-frontend_section    <-      frontend_header config_block <FrontendSection>
+frontend_section    <-      frontend_header config_block
 
-backend_section     <-      backend_header config_block <BackendSection>
+backend_section     <-      backend_header config_block
 
-global_header       <-      whitespace "global" whitespace comment_text? line_break <GlobalHeader>
+global_header       <-      whitespace "global" whitespace comment_text? line_break
 
-userlist_header     <-      whitespace "userlist" whitespace proxy_name comment_text? line_break <UserlistHeader>
+userlist_header     <-      whitespace "userlist" whitespace proxy_name comment_text? line_break
 
-defaults_header     <-      whitespace "defaults" whitespace proxy_name? whitespace comment_text? line_break <DefaultsHeader>
+defaults_header     <-      whitespace "defaults" whitespace proxy_name? whitespace comment_text? line_break
 
-listen_header       <-      whitespace "listen" whitespace proxy_name whitespace service_address? value? comment_text? line_break <ListenHeader>
+listen_header       <-      whitespace "listen" whitespace proxy_name whitespace service_address? value? comment_text? line_break
 
-frontend_header     <-      whitespace "frontend" whitespace proxy_name whitespace service_address? values? comment_text? line_break <FrontendHeader>
+frontend_header     <-      whitespace "frontend" whitespace proxy_name whitespace service_address? value? comment_text? line_break
 
-backend_header      <-      whitespace "backend" whitespace proxy_name whitespace value? comment_text? line_break <BackendHeader>
+backend_header      <-      whitespace "backend" whitespace proxy_name whitespace value? comment_text? line_break
 
-config_block        <-      (server_line / option_line / config_line / comment_line / blank_line)* <ConfigBlock>
+config_block        <-      (server_line / option_line / config_line / comment_line / blank_line)*
 
-server_line         <-      whitespace "server" whitespace server_name whitespace service_address value? comment_text? line_break <ServerLine>
+server_line         <-      whitespace "server" whitespace server_name whitespace service_address value? comment_text? line_break
 
-option_line         <-      whitespace "option" whitespace keyword whitespace value? comment_text? line_break <OptionLine>
+option_line         <-      whitespace "option" whitespace keyword whitespace value? comment_text? line_break
 
-config_line         <-      whitespace !("defaults" / "global" / "listen" / "frontend" / "backend") keyword whitespace value? comment_text? line_break <ConfigLine>
+config_line         <-      whitespace !("defaults" / "global" / "listen" / "frontend" / "backend") keyword whitespace value? comment_text? line_break
 
-comment_line        <-      whitespace comment_text line_break <CommentLine>
+comment_line        <-      whitespace comment_text line_break
 
-blank_line          <-      whitespace line_break <BlankLine>
+blank_line          <-      whitespace line_break
 
-comment_text        <-      "#" char* &line_break <CommentText>
+comment_text        <-      "#" char* &line_break
 
-line_break          <-      [\n] <LineBreak>
+line_break          <-      [\n]
 
-keyword             <-      (("errorfile" / "timeout") whitespace)? [a-z0-9\-\.]+ <Keyword>
+keyword             <-      (("errorfile" / "timeout") whitespace)? [a-z0-9\-\.]+
 
-server_name         <-      [a-zA-z0-9\-\_\.:]+ <ServerName>
+server_name         <-      [a-zA-z0-9\-\_\.:]+
 
-service_address     <-      host [:]? port <ServiceAddress>
+service_address     <-      host [:]? port
 
 host                <-      ipv4_host / dns_host / wildcard_host
 
-port                <-      [\d]* <Port>
+port                <-      [\d]*
 
-ipv4_host           <-      [\d]+ "." [\d]+ "." [\d]+ "." [\d]+ <Host>
+ipv4_host           <-      [\d]+ "." [\d]+ "." [\d]+ "." [\d]+
 
-dns_host            <-      [a-zA-Z\-\.\d]+ <Host>
+dns_host            <-      [a-zA-Z\-\.\d]+
 
-wildcard_host       <-      "*" <Host>
+wildcard_host       <-      "*"
 
-proxy_name          <-      [a-zA-Z0-9\-\_\.:]+ <ProxyName>
+proxy_name          <-      [a-zA-Z0-9\-\_\.:]+
 
-value               <-      [^#\n]+ <Value>
+value               <-      [^#\n]+
 
-char                <-      ![\n] . <Char>
+char                <-      ![\n] .
 
-whitespace          <-      [ \t]* <Whitespace>
+whitespace          <-      [ \t]*

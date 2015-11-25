@@ -4,7 +4,7 @@
 import os
 
 import pegnode
-# import config
+import config
 
 
 class Parser(object):
@@ -18,37 +18,108 @@ class Parser(object):
         self.filestring = self.__read_string_from_file(filepath)
         if not self.filestring:
             raise Exception('error reading from file %s' % filepath)
+
+    def build_configration(self):
+        """Parse the haproxy config file
+
+        Raises:
+            Exception: when there are unsupported section
+
+        Returns:
+            config.Configration: haproxy config object
+        """
         self.pegtree = pegnode.parse(self.filestring)
+        configration = config.Configration(self.pegtree)
+        for section_node in self.pegtree:
+            if isinstance(section_node, pegnode.GlobalSection):
+                configration.globall = self.build_global(section_node)
+            elif isinstance(section_node, pegnode.FrontendSection):
+                configration.frontends.append(
+                    self.build_frontend(section_node))
+            elif isinstance(section_node, pegnode.DefaultsSection):
+                configration.defaults.append(
+                    self.build_defaults(section_node))
+            elif isinstance(section_node, pegnode.ListenSection):
+                configration.listens.append(
+                    self.build_listen(section_node))
+            elif isinstance(section_node, pegnode.UserlistSection):
+                configration.userlists.append(
+                    self.build_userlist(section_node))
+            elif isinstance(section_node, pegnode.BackendSection):
+                configration.backends.append(
+                    self.build_backend(section_node))
+            else:
+                raise Exception('Unsupported section')
+        return configration
 
-    def build_global(self):
-        """parse `global` section, and return a config.Global instance"""
+    def build_global(self, global_node):
+
+        """parse `global` section, and return the config.Global
+
+        Args:
+            global_node (TreeNode):  `global` section treenode
+
+        Returns:
+            config.Global: an object
+        """
+        configs, options, _ = self.build_config_block(global_node.config_block)
+        return config.Global(configs, options)
+
+    def build_config_block(self, config_block_node):
+        """parse `config_block` in each section
+
+        Args:
+            config_block_node (TYPE): Description
+
+        Returns:
+            (list, list, list):
+                the <configs, options, servers> in `config_block`
+        """
+        configs, options, servers = [], [], []
+        for line_node in config_block_node:
+            if isinstance(line_node, pegnode.ConfigLine):
+                configs.append(
+                    dict([(line_node.keyword.text, line_node.value.text)]))
+            elif isinstance(line_node, pegnode.OptionLine):
+                options.append(
+                    dict([(line_node.keyword.text, line_node.value.text)]))
+            elif isinstance(line_node, pegnode.ServerLine):
+                servers.append(self.build_server(line_node))
+        return configs, options, servers
+
+    def build_server(self, server_node):
         pass
 
-    def build_defaults(self):
-        """parse `defaults` sections, and return a list of config.Defaults"""
+    def build_defaults(self, defaults_node):
+        """parse `defaults` sections, and return a config.Defaults"""
         pass
 
-    def build_userlists(self):
-        """parse `userlist` sections, and return a list of config.Userlist"""
+    def build_userlist(self, userlist_node):
+        """parse `userlist` sections, and return a config.Userlist"""
         pass
 
-    def build_listens(self):
-        """parse `listen` sections, and return a list of config.Listen"""
+    def build_listen(self, listen_node):
+        """parse `listen` sections, and return a config.Listen"""
         pass
 
-    def build_frontends(self):
-        """parse `frontend` sections, and return a list of config.Frontend"""
+    def build_frontend(self, frontend_node):
+        """parse `frontend` sections, and return a config.Frontend"""
         pass
 
-    def build_backends(self):
-        """parse `backend` sections, and return a list of config.Backend"""
+    def build_backend(self, backend_node):
+        """parse `backend` sections, and return a config.Backend"""
         pass
 
     def __read_string_from_file(self, filepath):
         filestring = ''
         if os.path.exists(filepath):
             with open(filepath) as f:
-                f
                 for line in f:
                     filestring = filestring + line
         return filestring
+
+
+if __name__ == '__main__':
+    parser = Parser('haproxy.cfg')
+    configration = parser.build_configration()
+    print configration.globall.configs, '----', configration.globall.options

@@ -9,4 +9,4 @@ To implemented.
 
 # Thanks
 * Inspired by @subakva 's [haproxy-tools](https://github.com/subakva/haproxy-tools)
-* Use [canopy](https://github.com/jcoglan/canopy) for PEG parsing and Python code auto-generating
+* Use [canopy](https://github.com/jcoglan/canopy) of @jcoglan for PEG parsing and Python code auto-generating

@@ -62,9 +62,9 @@ class BackendSection(TreeNode):
         self.config_block = elements[1]
 
 
-class GloalHeader(TreeNode):
+class GlobalHeader(TreeNode):
     def __init__(self, text, offset, elements):
-        super(GloalHeader, self).__init__(text, offset, elements)
+        super(GlobalHeader, self).__init__(text, offset, elements)
         self.whitespace = elements[2]
         self.line_break = elements[4]
 
@@ -123,6 +123,7 @@ class OptionLine(TreeNode):
         self.whitespace = elements[4]
         self.keyword = elements[3]
         self.line_break = elements[7]
+        self.value = elements[5]
 
 
 class ConfigLine(TreeNode):
@@ -131,6 +132,7 @@ class ConfigLine(TreeNode):
         self.whitespace = elements[3]
         self.keyword = elements[2]
         self.line_break = elements[6]
+        self.value = elements[4]
 
 
 class CommentLine(TreeNode):
@@ -463,7 +465,7 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = GloalHeader(self._input[index1:self._offset], index1, elements0)
+            address0 = GlobalHeader(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
         self._cache['global_header'][index0] = (address0, self._offset)
         return address0

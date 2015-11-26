@@ -1534,7 +1534,7 @@ class Grammar(object):
                         self._failure = self._offset
                         self._expected = []
                     if self._offset == self._failure:
-                        self._expected.append('[a-z0-9\\-\\.]')
+                        self._expected.append('[a-z0-9\\-\\_\\.]')
                 if address5 is not FAILURE:
                     elements2.append(address5)
                     remaining0 -= 1

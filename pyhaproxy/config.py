@@ -92,7 +92,7 @@ class Listen(HasServer):
         self.configs = configs or []
 
 
-class Frontend(HasServer):
+class Frontend(object):
     def __init__(self, name, host, port, options, configs):
         super(Frontend, self).__init__()
         self.name = name

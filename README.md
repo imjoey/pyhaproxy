@@ -19,7 +19,7 @@ $ source pyhaproxy/bin/activate
 Use nose unit testing to run the code
 * Run unittest
 ```bash
-(pyhaproxy)$ nosetests test.py
+(pyhaproxy)$ nosetests -sv test.py
 ```
 
 

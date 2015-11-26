@@ -43,7 +43,6 @@ for frontend in configration.frontends:
 
 # Unittest
 Use nose unit test framework
-* Run unittest
 ```bash
 (pyhaproxy)$ nosetests -sv test.py
 ```

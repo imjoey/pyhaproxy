@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 
 import os
+from collections import defaultdict
 
 import pegnode
 import config
@@ -62,9 +63,10 @@ class Parser(object):
         Returns:
             config.Global: an object
         """
-        configs, options, _ = self.build_config_block(
+        config_block_dict = self.build_config_block(
             global_node.config_block, with_server=False)
-        return config.Global(configs, options)
+        return config.Global(
+            config_block_dict['configs'], config_block_dict['options'])
 
     def build_config_block(self, config_block_node, with_server=True):
         """parse `config_block` in each section
@@ -74,20 +76,25 @@ class Parser(object):
             with_server (bool): determines if to parse server_lines
 
         Returns:
-            (list, list, list):
+            ({'configs': list(dict),
+              'options': list(dict),
+              'servers': list(dict)}
+            ):
                 the <configs, options, servers> in `config_block`
         """
-        configs, options, servers = [], [], []
+        config_block_dict = defaultdict(list)
+
         for line_node in config_block_node:
             if isinstance(line_node, pegnode.ConfigLine):
-                configs.append(
+                config_block_dict['configs'].append(
                     dict([(line_node.keyword.text, line_node.value.text)]))
             elif isinstance(line_node, pegnode.OptionLine):
-                options.append(
+                config_block_dict['options'].append(
                     dict([(line_node.keyword.text, line_node.value.text)]))
             elif isinstance(line_node, pegnode.ServerLine) and with_server:
-                servers.append(self.build_server(line_node))
-        return configs, options, servers
+                config_block_dict['servers'].append(
+                    self.build_server(line_node))
+        return config_block_dict
 
     def build_server(self, server_node):
         server_name = server_node.proxy_name.text
@@ -118,13 +125,15 @@ class Parser(object):
         host, port = '', ''
         if isinstance(service_address, pegnode.ServiceAddress):
             host, port = service_address.host.text, service_address.port.text
-        else:  # TODO:
+        else:  # TODO: parse frontend host&&port from `bind` config line
             pass
 
         # parse the config block
-        options, configs, _ = self.build_config_block(
+        config_block_dict = self.build_config_block(
             frontend_node.config_block, with_server=False)
-        return config.Frontend(proxy_name, host, port, options, configs)
+        return config.Frontend(
+            proxy_name, host, port,
+            config_block_dict['options'], config_block_dict['configs'])
 
     def build_backend(self, backend_node):
         """parse `backend` sections, and return a config.Backend"""

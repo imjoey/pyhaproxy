@@ -42,7 +42,7 @@ comment_text        <-      "#" char* &line_break
 
 line_break          <-      [\n]
 
-keyword             <-      (("errorfile" / "timeout") whitespace)? [a-z0-9\-\.]+
+keyword             <-      (("errorfile" / "timeout") whitespace)? [a-z0-9\-\_\.]+
 
 server_name         <-      [a-zA-z0-9\-\_\.:]+
 

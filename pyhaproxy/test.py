@@ -32,7 +32,3 @@ class TestParse(object):
             print frontend.configs
             print frontend.options
             print '-' * 30
-
-
-if __name__ == '__main__':
-    main()

@@ -41,7 +41,7 @@ for frontend in configration.frontends:
 
 ```
 
-# Run unit-test
+# Unittest
 Use nose unit test framework
 * Run unittest
 ```bash

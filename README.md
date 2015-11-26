@@ -25,7 +25,7 @@ import config
 import parse
 
 parser = parse.Parser('haproxy.cfg')
-configration = self.parser.build_configration()
+configration = parser.build_configration()
 
 # print global section
 print configration.globall

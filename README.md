@@ -42,9 +42,9 @@ for frontend in configration.frontends:
 ```
 
 # TODO
-- [x] Parse `global` section
-- [x] Parse `frontend` sections
-- [x] Parse `bind` config lines
+- [x] ~~Parse `global` section~~
+- [x] ~~Parse `frontend` sections~~
+- [x] ~~Parse `bind` config lines~~
 - [ ] Parse `backend` sections
 - [ ] Parse `defaults` sections
 - [ ] Parse `userlist` sections

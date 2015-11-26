@@ -109,3 +109,10 @@ class Server(object):
         self.host = host
         self.port = port
         self.attributes = attributes or []
+
+
+class Bind(object):
+    def __init__(self, host, port, attributes):
+        self.host = host
+        self.port = port
+        self.attributes = attributes or []

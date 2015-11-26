@@ -90,7 +90,14 @@ class Parser(object):
         return configs, options, servers
 
     def build_server(self, server_node):
-        pass
+        server_name = server_node.proxy_name.text
+        host = server_node.service_address.host.text
+        port = server_node.service_address.port.text
+
+        # parse server attributes, value is similar to \
+        # 'maxconn 1024 weight 3 check inter 2000 rise 2 fall 3'
+        server_attributes = server_node.value.text.split(' \t')
+        return config.Server(server_name, host, port, server_attributes)
 
     def build_defaults(self, defaults_node):
         """parse `defaults` sections, and return a config.Defaults"""
@@ -104,28 +111,17 @@ class Parser(object):
         """parse `listen` sections, and return a config.Listen"""
         pass
 
-    '''
-    class Frontend(HasServer):
-        def __init__(self, name, host, port, options, configs):
-            super(Frontend, self).__init__()
-            self.name = name
-            self.host = host
-            self.port = port
-            self.options = options
-            self.configs = configs
-    '''
-
     def build_frontend(self, frontend_node):
         """parse `frontend` sections, and return a config.Frontend"""
-        proxy_name = frontend_node.frontend_header.proxy_name
+        proxy_name = frontend_node.frontend_header.proxy_name.text
         service_address = frontend_node.frontend_header.service_address
         # parse the config block
         options, configs, _ = self.build_config_block(
             frontend_node.config_block, with_server=False)
 
         return config.FrontendSection(
-            proxy_name, service_address.host,
-            service_address.port, options, configs)
+            proxy_name, service_address.host.text,
+            service_address.port.text, options, configs)
 
     def build_backend(self, backend_node):
         """parse `backend` sections, and return a config.Backend"""

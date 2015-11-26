@@ -50,18 +50,21 @@ class Global(object):
         options (list): option list
     """
     def __init__(self, configs, options):
-        self.configs = configs
-        self.options = options
+        self.configs = configs or []
+        self.options = options or []
 
 
 class Default(object):
     def __init__(self, name, options, configs):
         self.name = name
-        self.configs = configs
-        self.options = options
+        self.configs = configs or []
+        self.options = options or []
 
 
 class HasServer(object):
+
+    def __init__(self, servers):
+        self.servers = servers or []
 
     def add_server(self, name, host, port, attributes):
         server = Server(name, host, port, attributes)
@@ -72,23 +75,21 @@ class Backend(HasServer):
     '''
         `backend` section
     '''
-    def __init__(self, name, options, configs):
-        super(Backend, self).__init()
+    def __init__(self, name, options, configs, servers):
+        super(Backend, self).__init(servers)
         self.name = name
-        self.options = options
-        self.configs = configs
-        self.servers = []
+        self.options = options or []
+        self.configs = configs or []
 
 
 class Listen(HasServer):
-    def __init__(self, name, host, port, options, configs):
-        super(Listen, self).__init__()
+    def __init__(self, name, host, port, options, configs, servers):
+        super(Listen, self).__init__(servers)
         self.name = name
         self.host = host
         self.port = port
-        self.options = options
-        self.configs = configs
-        self.servers = []
+        self.options = options or []
+        self.configs = configs or []
 
 
 class Frontend(HasServer):
@@ -97,8 +98,8 @@ class Frontend(HasServer):
         self.name = name
         self.host = host
         self.port = port
-        self.options = options
-        self.configs = configs
+        self.options = options or []
+        self.configs = configs or []
 
 
 class Server(object):
@@ -107,4 +108,4 @@ class Server(object):
         self.name = name
         self.host = host
         self.port = port
-        self.attributes = attributes
+        self.attributes = attributes or []

@@ -41,6 +41,24 @@ for frontend in configration.frontends:
 
 ```
 
+# TODO
+- [x] Parse `global` section
+- [x] Parse `frontend` sections
+- [x] Parse `bind` config lines
+- [ ] Parse `backend` sections
+- [ ] Parse `defaults` sections
+- [ ] Parse `userlist` sections
+- [ ] Parse `listen` sections
+- [ ] Parse `acl` config lines
+- [ ] Parse `use_backend` and `default_backend` config lines
+- [ ] Link `backend` with `frontend` by `acl`
+- [ ] Render `global` section
+- [ ] Render `frontend` section
+- [ ] Render `backend` sections
+- [ ] Render `defaults` sections
+- [ ] Render `userlist` sections
+- [ ] Render `listen` sections
+
 # Unittest
 Use nose unit test framework
 ```bash

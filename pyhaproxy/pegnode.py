@@ -175,7 +175,7 @@ FAILURE = object()
 
 class Grammar(object):
     REGEX_1 = re.compile('^[\\n]')
-    REGEX_2 = re.compile('^[a-z0-9\\-\\.]')
+    REGEX_2 = re.compile('^[a-z0-9\\-\\_\\.]')
     REGEX_3 = re.compile('^[a-zA-z0-9\\-\\_\\.:]')
     REGEX_4 = re.compile('^[:]')
     REGEX_5 = re.compile('^[\\d]')

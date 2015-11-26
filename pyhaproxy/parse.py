@@ -62,14 +62,16 @@ class Parser(object):
         Returns:
             config.Global: an object
         """
-        configs, options, _ = self.build_config_block(global_node.config_block)
+        configs, options, _ = self.build_config_block(
+            global_node.config_block, with_server=False)
         return config.Global(configs, options)
 
-    def build_config_block(self, config_block_node):
+    def build_config_block(self, config_block_node, with_server=True):
         """parse `config_block` in each section
 
         Args:
-            config_block_node (TYPE): Description
+            config_block_node (TreeNode): Description
+            with_server (bool): determines if to parse server_lines
 
         Returns:
             (list, list, list):
@@ -83,7 +85,7 @@ class Parser(object):
             elif isinstance(line_node, pegnode.OptionLine):
                 options.append(
                     dict([(line_node.keyword.text, line_node.value.text)]))
-            elif isinstance(line_node, pegnode.ServerLine):
+            elif isinstance(line_node, pegnode.ServerLine) and with_server:
                 servers.append(self.build_server(line_node))
         return configs, options, servers
 
@@ -102,9 +104,28 @@ class Parser(object):
         """parse `listen` sections, and return a config.Listen"""
         pass
 
+    '''
+    class Frontend(HasServer):
+        def __init__(self, name, host, port, options, configs):
+            super(Frontend, self).__init__()
+            self.name = name
+            self.host = host
+            self.port = port
+            self.options = options
+            self.configs = configs
+    '''
+
     def build_frontend(self, frontend_node):
         """parse `frontend` sections, and return a config.Frontend"""
-        pass
+        proxy_name = frontend_node.frontend_header.proxy_name
+        service_address = frontend_node.frontend_header.service_address
+        # parse the config block
+        options, configs, _ = self.build_config_block(
+            frontend_node.config_block, with_server=False)
+
+        return config.FrontendSection(
+            proxy_name, service_address.host,
+            service_address.port, options, configs)
 
     def build_backend(self, backend_node):
         """parse `backend` sections, and return a config.Backend"""

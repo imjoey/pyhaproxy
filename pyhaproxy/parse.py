@@ -115,13 +115,16 @@ class Parser(object):
         """parse `frontend` sections, and return a config.Frontend"""
         proxy_name = frontend_node.frontend_header.proxy_name.text
         service_address = frontend_node.frontend_header.service_address
+        host, port = '', ''
+        if isinstance(service_address, pegnode.ServiceAddress):
+            host, port = service_address.host.text, service_address.port.text
+        else:  # TODO:
+            pass
+
         # parse the config block
         options, configs, _ = self.build_config_block(
             frontend_node.config_block, with_server=False)
-
-        return config.Frontend(
-            proxy_name, service_address.host.text,
-            service_address.port.text, options, configs)
+        return config.Frontend(proxy_name, host, port, options, configs)
 
     def build_backend(self, backend_node):
         """parse `backend` sections, and return a config.Backend"""
@@ -134,9 +137,3 @@ class Parser(object):
                 for line in f:
                     filestring = filestring + line
         return filestring
-
-
-if __name__ == '__main__':
-    parser = Parser('haproxy.cfg')
-    configration = parser.build_configration()
-    print configration.globall.configs, '----', configration.globall.options

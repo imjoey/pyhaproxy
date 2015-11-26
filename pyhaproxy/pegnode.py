@@ -117,6 +117,7 @@ class ServerLine(TreeNode):
         self.server_name = elements[3]
         self.service_address = elements[5]
         self.line_break = elements[8]
+        self.value = elements[6]
 
 
 class OptionLine(TreeNode):

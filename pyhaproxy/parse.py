@@ -119,7 +119,7 @@ class Parser(object):
         options, configs, _ = self.build_config_block(
             frontend_node.config_block, with_server=False)
 
-        return config.FrontendSection(
+        return config.Frontend(
             proxy_name, service_address.host.text,
             service_address.port.text, options, configs)
 

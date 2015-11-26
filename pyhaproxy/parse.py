@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 
 import os
+import re
 from collections import defaultdict
 
 import pegnode
@@ -122,18 +123,36 @@ class Parser(object):
         """parse `frontend` sections, and return a config.Frontend"""
         proxy_name = frontend_node.frontend_header.proxy_name.text
         service_address = frontend_node.frontend_header.service_address
-        host, port = '', ''
-        if isinstance(service_address, pegnode.ServiceAddress):
-            host, port = service_address.host.text, service_address.port.text
-        else:  # TODO: parse frontend host&&port from `bind` config line
-            pass
 
         # parse the config block
         config_block_dict = self.build_config_block(
             frontend_node.config_block, with_server=False)
+
+        # parse host and port
+        host, port = '', ''
+        if isinstance(service_address, pegnode.ServiceAddress):
+            host, port = service_address.host.text, service_address.port.text
+        else:
+            bind = self.build_bind(frontend_node.config_block)
+            if bind:
+                host, port = bind.host, bind.port
+            else:
+                raise Exception(
+                    'Not specify host and port in `frontend` definition')
         return config.Frontend(
             proxy_name, host, port,
             config_block_dict['options'], config_block_dict['configs'])
+
+    def build_bind(self, config_block):
+        bind_re_str = r'[ \t]*bind[ \t]+(?P<host>[a-zA-Z0-9\.]*)[:]*(?P<port>[\d]*)[ \t]+(?P<attributes>[^#\n]*)'
+        bind_pattern = re.compile(bind_re_str)
+        for ele in config_block:
+            match_group = bind_pattern.match(ele.text)
+            if match_group:
+                attributes = match_group.group('attributes').split(' \t')
+                host = match_group.group('host')
+                port = match_group.group('port')
+                return config.Bind(host, port, attributes)
 
     def build_backend(self, backend_node):
         """parse `backend` sections, and return a config.Backend"""

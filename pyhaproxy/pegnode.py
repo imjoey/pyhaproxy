@@ -149,6 +149,7 @@ class AclLine(TreeNode):
         self.whitespace = elements[4]
         self.acl_name = elements[3]
         self.line_break = elements[7]
+        self.value = elements[5]
 
 
 class BackendLine(TreeNode):
@@ -157,6 +158,8 @@ class BackendLine(TreeNode):
         self.whitespace = elements[6]
         self.backend_name = elements[3]
         self.line_break = elements[9]
+        self.operator = elements[5]
+        self.backend_condition = elements[7]
 
 
 class CommentLine(TreeNode):

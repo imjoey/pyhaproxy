@@ -120,3 +120,16 @@ class Bind(object):
         self.host = host
         self.port = port
         self.attributes = attributes or []
+
+
+class Acl(object):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+
+class UseBackend(object):
+    def __init__(self, backend_name, operator, backend_condition):
+        self.backend_name = backend_name
+        self.operator = operator
+        self.backend_condition = backend_condition

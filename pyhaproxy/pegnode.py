@@ -84,8 +84,6 @@ class ListenHeader(TreeNode):
         self.whitespace = elements[4]
         self.proxy_name = elements[3]
         self.line_break = elements[8]
-        self.service_address = elements[5]
-        self.value = elements[6]
 
 
 class FrontendHeader(TreeNode):
@@ -95,7 +93,6 @@ class FrontendHeader(TreeNode):
         self.proxy_name = elements[3]
         self.line_break = elements[8]
         self.service_address = elements[5]
-        self.value = elements[6]
 
 
 class BackendHeader(TreeNode):
@@ -104,7 +101,6 @@ class BackendHeader(TreeNode):
         self.whitespace = elements[4]
         self.proxy_name = elements[3]
         self.line_break = elements[7]
-        self.value = elements[5]
 
 
 class ServerLine(TreeNode):
@@ -126,15 +122,6 @@ class OptionLine(TreeNode):
         self.value = elements[5]
 
 
-class ConfigLine(TreeNode):
-    def __init__(self, text, offset, elements):
-        super(ConfigLine, self).__init__(text, offset, elements)
-        self.whitespace = elements[3]
-        self.keyword = elements[2]
-        self.line_break = elements[6]
-        self.value = elements[4]
-
-
 class BindLine(TreeNode):
     def __init__(self, text, offset, elements):
         super(BindLine, self).__init__(text, offset, elements)
@@ -153,15 +140,24 @@ class AclLine(TreeNode):
         self.value = elements[5]
 
 
-class UseBackendLine(TreeNode):
+class BackendLine(TreeNode):
     def __init__(self, text, offset, elements):
-        super(UseBackendLine, self).__init__(text, offset, elements)
+        super(BackendLine, self).__init__(text, offset, elements)
         self.whitespace = elements[6]
         self.backend_name = elements[3]
         self.line_break = elements[9]
         self.operator = elements[5]
         self.backend_condition = elements[7]
         self.backendtype = elements[1]
+
+
+class ConfigLine(TreeNode):
+    def __init__(self, text, offset, elements):
+        super(ConfigLine, self).__init__(text, offset, elements)
+        self.whitespace = elements[3]
+        self.keyword = elements[2]
+        self.line_break = elements[6]
+        self.value = elements[4]
 
 
 class CommentLine(TreeNode):
@@ -286,8 +282,7 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = GlobalSection(
-                self._input[index1:self._offset], index1, elements0)
+            address0 = GlobalSection(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
         self._cache['global_section'][index0] = (address0, self._offset)
         return address0
@@ -316,8 +311,7 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = DefaultsSection(
-                self._input[index1:self._offset], index1, elements0)
+            address0 = DefaultsSection(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
         self._cache['defaults_section'][index0] = (address0, self._offset)
         return address0
@@ -971,22 +965,22 @@ class Grammar(object):
                 address1 = self._read_option_line()
                 if address1 is FAILURE:
                     self._offset = index2
-                    address1 = self._read_config_line()
+                    address1 = self._read_bind_line()
                     if address1 is FAILURE:
                         self._offset = index2
-                        address1 = self._read_comment_line()
+                        address1 = self._read_acl_line()
                         if address1 is FAILURE:
                             self._offset = index2
-                            address1 = self._read_blank_line()
+                            address1 = self._read_backend_line()
                             if address1 is FAILURE:
                                 self._offset = index2
-                                address1 = self._read_bind_line()
+                                address1 = self._read_config_line()
                                 if address1 is FAILURE:
                                     self._offset = index2
-                                    address1 = self._read_acl_line()
+                                    address1 = self._read_comment_line()
                                     if address1 is FAILURE:
                                         self._offset = index2
-                                        address1 = self._read_backend_line()
+                                        address1 = self._read_blank_line()
                                         if address1 is FAILURE:
                                             self._offset = index2
             if address1 is not FAILURE:
@@ -1187,160 +1181,6 @@ class Grammar(object):
             address0 = OptionLine(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
         self._cache['option_line'][index0] = (address0, self._offset)
-        return address0
-
-    def _read_config_line(self):
-        address0, index0 = FAILURE, self._offset
-        cached = self._cache['config_line'].get(index0)
-        if cached:
-            self._offset = cached[1]
-            return cached[0]
-        index1, elements0 = self._offset, []
-        address1 = FAILURE
-        address1 = self._read_whitespace()
-        if address1 is not FAILURE:
-            elements0.append(address1)
-            address2 = FAILURE
-            index2 = self._offset
-            index3 = self._offset
-            chunk0 = None
-            if self._offset < self._input_size:
-                chunk0 = self._input[self._offset:self._offset + 8]
-            if chunk0 == 'defaults':
-                address2 = TreeNode(self._input[self._offset:self._offset + 8], self._offset)
-                self._offset = self._offset + 8
-            else:
-                address2 = FAILURE
-                if self._offset > self._failure:
-                    self._failure = self._offset
-                    self._expected = []
-                if self._offset == self._failure:
-                    self._expected.append('"defaults"')
-            if address2 is FAILURE:
-                self._offset = index3
-                chunk1 = None
-                if self._offset < self._input_size:
-                    chunk1 = self._input[self._offset:self._offset + 6]
-                if chunk1 == 'global':
-                    address2 = TreeNode(self._input[self._offset:self._offset + 6], self._offset)
-                    self._offset = self._offset + 6
-                else:
-                    address2 = FAILURE
-                    if self._offset > self._failure:
-                        self._failure = self._offset
-                        self._expected = []
-                    if self._offset == self._failure:
-                        self._expected.append('"global"')
-                if address2 is FAILURE:
-                    self._offset = index3
-                    chunk2 = None
-                    if self._offset < self._input_size:
-                        chunk2 = self._input[self._offset:self._offset + 6]
-                    if chunk2 == 'listen':
-                        address2 = TreeNode(self._input[self._offset:self._offset + 6], self._offset)
-                        self._offset = self._offset + 6
-                    else:
-                        address2 = FAILURE
-                        if self._offset > self._failure:
-                            self._failure = self._offset
-                            self._expected = []
-                        if self._offset == self._failure:
-                            self._expected.append('"listen"')
-                    if address2 is FAILURE:
-                        self._offset = index3
-                        chunk3 = None
-                        if self._offset < self._input_size:
-                            chunk3 = self._input[self._offset:self._offset + 8]
-                        if chunk3 == 'frontend':
-                            address2 = TreeNode(self._input[self._offset:self._offset + 8], self._offset)
-                            self._offset = self._offset + 8
-                        else:
-                            address2 = FAILURE
-                            if self._offset > self._failure:
-                                self._failure = self._offset
-                                self._expected = []
-                            if self._offset == self._failure:
-                                self._expected.append('"frontend"')
-                        if address2 is FAILURE:
-                            self._offset = index3
-                            chunk4 = None
-                            if self._offset < self._input_size:
-                                chunk4 = self._input[self._offset:self._offset + 7]
-                            if chunk4 == 'backend':
-                                address2 = TreeNode(self._input[self._offset:self._offset + 7], self._offset)
-                                self._offset = self._offset + 7
-                            else:
-                                address2 = FAILURE
-                                if self._offset > self._failure:
-                                    self._failure = self._offset
-                                    self._expected = []
-                                if self._offset == self._failure:
-                                    self._expected.append('"backend"')
-                            if address2 is FAILURE:
-                                self._offset = index3
-            self._offset = index2
-            if address2 is FAILURE:
-                address2 = TreeNode(self._input[self._offset:self._offset], self._offset)
-                self._offset = self._offset
-            else:
-                address2 = FAILURE
-            if address2 is not FAILURE:
-                elements0.append(address2)
-                address3 = FAILURE
-                address3 = self._read_keyword()
-                if address3 is not FAILURE:
-                    elements0.append(address3)
-                    address4 = FAILURE
-                    address4 = self._read_whitespace()
-                    if address4 is not FAILURE:
-                        elements0.append(address4)
-                        address5 = FAILURE
-                        index4 = self._offset
-                        address5 = self._read_value()
-                        if address5 is FAILURE:
-                            address5 = TreeNode(self._input[index4:index4], index4)
-                            self._offset = index4
-                        if address5 is not FAILURE:
-                            elements0.append(address5)
-                            address6 = FAILURE
-                            index5 = self._offset
-                            address6 = self._read_comment_text()
-                            if address6 is FAILURE:
-                                address6 = TreeNode(self._input[index5:index5], index5)
-                                self._offset = index5
-                            if address6 is not FAILURE:
-                                elements0.append(address6)
-                                address7 = FAILURE
-                                address7 = self._read_line_break()
-                                if address7 is not FAILURE:
-                                    elements0.append(address7)
-                                else:
-                                    elements0 = None
-                                    self._offset = index1
-                            else:
-                                elements0 = None
-                                self._offset = index1
-                        else:
-                            elements0 = None
-                            self._offset = index1
-                    else:
-                        elements0 = None
-                        self._offset = index1
-                else:
-                    elements0 = None
-                    self._offset = index1
-            else:
-                elements0 = None
-                self._offset = index1
-        else:
-            elements0 = None
-            self._offset = index1
-        if elements0 is None:
-            address0 = FAILURE
-        else:
-            address0 = ConfigLine(self._input[index1:self._offset], index1, elements0)
-            self._offset = self._offset
-        self._cache['config_line'][index0] = (address0, self._offset)
         return address0
 
     def _read_bind_line(self):
@@ -1683,9 +1523,163 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = UseBackendLine(self._input[index1:self._offset], index1, elements0)
+            address0 = BackendLine(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
         self._cache['backend_line'][index0] = (address0, self._offset)
+        return address0
+
+    def _read_config_line(self):
+        address0, index0 = FAILURE, self._offset
+        cached = self._cache['config_line'].get(index0)
+        if cached:
+            self._offset = cached[1]
+            return cached[0]
+        index1, elements0 = self._offset, []
+        address1 = FAILURE
+        address1 = self._read_whitespace()
+        if address1 is not FAILURE:
+            elements0.append(address1)
+            address2 = FAILURE
+            index2 = self._offset
+            index3 = self._offset
+            chunk0 = None
+            if self._offset < self._input_size:
+                chunk0 = self._input[self._offset:self._offset + 8]
+            if chunk0 == 'defaults':
+                address2 = TreeNode(self._input[self._offset:self._offset + 8], self._offset)
+                self._offset = self._offset + 8
+            else:
+                address2 = FAILURE
+                if self._offset > self._failure:
+                    self._failure = self._offset
+                    self._expected = []
+                if self._offset == self._failure:
+                    self._expected.append('"defaults"')
+            if address2 is FAILURE:
+                self._offset = index3
+                chunk1 = None
+                if self._offset < self._input_size:
+                    chunk1 = self._input[self._offset:self._offset + 6]
+                if chunk1 == 'global':
+                    address2 = TreeNode(self._input[self._offset:self._offset + 6], self._offset)
+                    self._offset = self._offset + 6
+                else:
+                    address2 = FAILURE
+                    if self._offset > self._failure:
+                        self._failure = self._offset
+                        self._expected = []
+                    if self._offset == self._failure:
+                        self._expected.append('"global"')
+                if address2 is FAILURE:
+                    self._offset = index3
+                    chunk2 = None
+                    if self._offset < self._input_size:
+                        chunk2 = self._input[self._offset:self._offset + 6]
+                    if chunk2 == 'listen':
+                        address2 = TreeNode(self._input[self._offset:self._offset + 6], self._offset)
+                        self._offset = self._offset + 6
+                    else:
+                        address2 = FAILURE
+                        if self._offset > self._failure:
+                            self._failure = self._offset
+                            self._expected = []
+                        if self._offset == self._failure:
+                            self._expected.append('"listen"')
+                    if address2 is FAILURE:
+                        self._offset = index3
+                        chunk3 = None
+                        if self._offset < self._input_size:
+                            chunk3 = self._input[self._offset:self._offset + 8]
+                        if chunk3 == 'frontend':
+                            address2 = TreeNode(self._input[self._offset:self._offset + 8], self._offset)
+                            self._offset = self._offset + 8
+                        else:
+                            address2 = FAILURE
+                            if self._offset > self._failure:
+                                self._failure = self._offset
+                                self._expected = []
+                            if self._offset == self._failure:
+                                self._expected.append('"frontend"')
+                        if address2 is FAILURE:
+                            self._offset = index3
+                            chunk4 = None
+                            if self._offset < self._input_size:
+                                chunk4 = self._input[self._offset:self._offset + 7]
+                            if chunk4 == 'backend':
+                                address2 = TreeNode(self._input[self._offset:self._offset + 7], self._offset)
+                                self._offset = self._offset + 7
+                            else:
+                                address2 = FAILURE
+                                if self._offset > self._failure:
+                                    self._failure = self._offset
+                                    self._expected = []
+                                if self._offset == self._failure:
+                                    self._expected.append('"backend"')
+                            if address2 is FAILURE:
+                                self._offset = index3
+            self._offset = index2
+            if address2 is FAILURE:
+                address2 = TreeNode(self._input[self._offset:self._offset], self._offset)
+                self._offset = self._offset
+            else:
+                address2 = FAILURE
+            if address2 is not FAILURE:
+                elements0.append(address2)
+                address3 = FAILURE
+                address3 = self._read_keyword()
+                if address3 is not FAILURE:
+                    elements0.append(address3)
+                    address4 = FAILURE
+                    address4 = self._read_whitespace()
+                    if address4 is not FAILURE:
+                        elements0.append(address4)
+                        address5 = FAILURE
+                        index4 = self._offset
+                        address5 = self._read_value()
+                        if address5 is FAILURE:
+                            address5 = TreeNode(self._input[index4:index4], index4)
+                            self._offset = index4
+                        if address5 is not FAILURE:
+                            elements0.append(address5)
+                            address6 = FAILURE
+                            index5 = self._offset
+                            address6 = self._read_comment_text()
+                            if address6 is FAILURE:
+                                address6 = TreeNode(self._input[index5:index5], index5)
+                                self._offset = index5
+                            if address6 is not FAILURE:
+                                elements0.append(address6)
+                                address7 = FAILURE
+                                address7 = self._read_line_break()
+                                if address7 is not FAILURE:
+                                    elements0.append(address7)
+                                else:
+                                    elements0 = None
+                                    self._offset = index1
+                            else:
+                                elements0 = None
+                                self._offset = index1
+                        else:
+                            elements0 = None
+                            self._offset = index1
+                    else:
+                        elements0 = None
+                        self._offset = index1
+                else:
+                    elements0 = None
+                    self._offset = index1
+            else:
+                elements0 = None
+                self._offset = index1
+        else:
+            elements0 = None
+            self._offset = index1
+        if elements0 is None:
+            address0 = FAILURE
+        else:
+            address0 = ConfigLine(self._input[index1:self._offset], index1, elements0)
+            self._offset = self._offset
+        self._cache['config_line'][index0] = (address0, self._offset)
         return address0
 
     def _read_comment_line(self):

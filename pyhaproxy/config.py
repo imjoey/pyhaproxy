@@ -46,69 +46,52 @@ class Global(object):
     """Represens a `global` section
 
     Attributes:
-        configs (list): config list
-        options (list): option list
+        config_block (dict):
     """
-    def __init__(self, configs, options):
-        self.configs = configs or []
-        self.options = options or []
+    def __init__(self, config_block):
+        super(Global, self).__init__()
+        self.config_block = config_block
 
 
 class Defaults(object):
-    def __init__(self, name, options, configs):
+    def __init__(self, name, config_block):
+        super(Defaults, self).__init__()
         self.name = name
-        self.configs = configs or []
-        self.options = options or []
+        self.config_block = config_block
 
 
-class HasServer(object):
-
-    def __init__(self, servers):
-        self.servers = servers or []
-
-    def add_server(self, name, host, port, attributes):
-        server = Server(name, host, port, attributes)
-        self.servers.append(server)
-
-
-class Backend(HasServer):
+class Backend(object):
     '''
         `backend` section
     '''
-    def __init__(self, name, options, configs, servers):
-        super(Backend, self).__init__(servers)
+    def __init__(self, name, config_block):
+        super(Backend, self).__init__()
         self.name = name
-        self.options = options or []
-        self.configs = configs or []
-        self.servers = servers or []
+        self.config_block = config_block
 
 
-class Listen(HasServer):
-    def __init__(self, name, host, port, options,
-                 configs, servers, use_bind=False):
-        super(Listen, self).__init__(servers)
+class Listen(object):
+    def __init__(self, name, host, port, config_block):
+        super(Listen, self).__init__()
         self.name = name
         self.host = host
         self.port = port
-        self.options = options or []
-        self.configs = configs or []
-        self.use_bind = use_bind
+        self.config_block = config_block
 
 
 class Frontend(object):
-    def __init__(self, name, host, port, options, configs, use_bind=False):
+    def __init__(self, name, host, port, config_block):
         super(Frontend, self).__init__()
         self.name = name
         self.host = host
         self.port = port
-        self.options = options or []
-        self.configs = configs or []
-        self.use_bind = use_bind
+        self.config_block = config_block
 
 
 class Server(object):
 
     def __init__(self, name, host, port, attributes):
+        super(Server, self).__init__()
         self.name = name
         self.host = host
         self.port = port

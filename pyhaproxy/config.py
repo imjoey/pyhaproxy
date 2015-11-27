@@ -83,23 +83,26 @@ class Backend(HasServer):
 
 
 class Listen(HasServer):
-    def __init__(self, name, host, port, options, configs, servers):
+    def __init__(self, name, host, port, options,
+                 configs, servers, use_bind=False):
         super(Listen, self).__init__(servers)
         self.name = name
         self.host = host
         self.port = port
         self.options = options or []
         self.configs = configs or []
+        self.use_bind = use_bind
 
 
 class Frontend(object):
-    def __init__(self, name, host, port, options, configs):
+    def __init__(self, name, host, port, options, configs, use_bind=False):
         super(Frontend, self).__init__()
         self.name = name
         self.host = host
         self.port = port
         self.options = options or []
         self.configs = configs or []
+        self.use_bind = use_bind
 
 
 class Server(object):

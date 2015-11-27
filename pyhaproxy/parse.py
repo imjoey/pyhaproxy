@@ -67,7 +67,8 @@ class Parser(object):
         config_block_dict = self.build_config_block(
             global_node.config_block, with_server=False)
         return config.Global(
-            config_block_dict['configs'], config_block_dict['options'])
+            configs=config_block_dict['configs'],
+            options=config_block_dict['options'])
 
     def build_config_block(self, config_block_node, with_server=True):
         """parse `config_block` in each section
@@ -105,7 +106,9 @@ class Parser(object):
         # parse server attributes, value is similar to \
         # 'maxconn 1024 weight 3 check inter 2000 rise 2 fall 3'
         server_attributes = server_node.value.text.split(' \t')
-        return config.Server(server_name, host, port, server_attributes)
+        return config.Server(
+            name=server_name, host=host, port=port,
+            attributes=server_attributes)
 
     def build_defaults(self, defaults_node):
         """parse `defaults` sections, and return a config.Defaults
@@ -119,7 +122,8 @@ class Parser(object):
         proxy_name = defaults_node.defaults_header.proxy_name.text
         config_block_dict = self.build_config_block(defaults_node.config_block)
         return config.Defaults(
-            proxy_name, config_block_dict['options'], config_block_dict['configs'])
+            name=proxy_name, options=config_block_dict['options'],
+            configs=config_block_dict['configs'])
 
     def build_userlist(self, userlist_node):
         """parse `userlist` sections, and return a config.Userlist"""
@@ -141,7 +145,7 @@ class Parser(object):
         config_block_dict = self.build_config_block(listen_node.config_block)
 
         # parse host and port
-        host, port = '', ''
+        host, port, use_bind = '', '', False
         if isinstance(service_address_node, pegnode.ServiceAddress):
             host = service_address_node.host.text
             port = service_address_node.port.text
@@ -150,12 +154,16 @@ class Parser(object):
             bind = self.build_bind(listen_node.config_block)
             if bind:
                 host, port = bind.host, bind.port
+                use_bind = True
             else:
                 raise Exception(
                     'Not specify host and port in `frontend` definition')
         return config.Listen(
-            proxy_name, host, port,
-            config_block_dict['options'], config_block_dict['configs'])
+            name=proxy_name, host=host, port=port,
+            options=config_block_dict['options'],
+            configs=config_block_dict['configs'],
+            servers=config_block_dict['servers'],
+            use_bind=use_bind)
 
     def build_frontend(self, frontend_node):
         """parse `frontend` sections, and return a config.Frontend"""
@@ -167,7 +175,7 @@ class Parser(object):
             frontend_node.config_block, with_server=False)
 
         # parse host and port
-        host, port = '', ''
+        host, port, use_bind = '', '', False
         if isinstance(service_address_node, pegnode.ServiceAddress):
             host = service_address_node.host.text
             port = service_address_node.port.text
@@ -176,12 +184,15 @@ class Parser(object):
             bind = self.build_bind(frontend_node.config_block)
             if bind:
                 host, port = bind.host, bind.port
+                use_bind = True
             else:
                 raise Exception(
                     'Not specify host and port in `frontend` definition')
         return config.Frontend(
-            proxy_name, host, port,
-            config_block_dict['options'], config_block_dict['configs'])
+            name=proxy_name, host=host, port=port,
+            options=config_block_dict['options'],
+            configs=config_block_dict['configs'],
+            use_bind=use_bind)
 
     def build_bind(self, config_block):
         bind_re_str = r'[ \t]*bind[ \t]+(?P<host>[a-zA-Z0-9\.]*)[:]*(?P<port>[\d]*)[ \t]+(?P<attributes>[^#\n]*)'

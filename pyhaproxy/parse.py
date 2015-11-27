@@ -99,7 +99,7 @@ class Parser(object):
         return config_block_dict
 
     def build_server(self, server_node):
-        server_name = server_node.proxy_name.text
+        server_name = server_node.server_name.text
         host = server_node.service_address.host.text
         port = server_node.service_address.port.text
 
@@ -117,10 +117,11 @@ class Parser(object):
             defaults_node (TreeNode): Description
 
         Returns:
-            (config.Defaults): an object
+            config.Defaults: an object
         """
         proxy_name = defaults_node.defaults_header.proxy_name.text
-        config_block_dict = self.build_config_block(defaults_node.config_block)
+        config_block_dict = self.build_config_block(
+            defaults_node.config_block, with_server=False)
         return config.Defaults(
             name=proxy_name, options=config_block_dict['options'],
             configs=config_block_dict['configs'])
@@ -136,7 +137,7 @@ class Parser(object):
             listen_node (TreeNode): Description
 
         Returns:
-            (config.Defaults): an object
+            config.Listen: an object
         """
         proxy_name = listen_node.listen_header.proxy_name.text
         service_address_node = listen_node.listen_header.service_address
@@ -166,7 +167,17 @@ class Parser(object):
             use_bind=use_bind)
 
     def build_frontend(self, frontend_node):
-        """parse `frontend` sections, and return a config.Frontend"""
+        """parse `frontend` sections, and return a config.Frontend
+
+        Args:
+            frontend_node (TreeNode): Description
+
+        Raises:
+            Exception: Description
+
+        Returns:
+            config.Frontend: an object
+        """
         proxy_name = frontend_node.frontend_header.proxy_name.text
         service_address_node = frontend_node.frontend_header.service_address
 
@@ -195,6 +206,14 @@ class Parser(object):
             use_bind=use_bind)
 
     def build_bind(self, config_block):
+        """parse `bind` line in config block for host and port
+
+        Args:
+            config_block (TreeNode): the whole config block treenode
+
+        Returns:
+            config.Bind: an object
+        """
         bind_re_str = r'[ \t]*bind[ \t]+(?P<host>[a-zA-Z0-9\.]*)[:]*(?P<port>[\d]*)[ \t]+(?P<attributes>[^#\n]*)'
         bind_pattern = re.compile(bind_re_str)
         for ele in config_block:
@@ -206,8 +225,20 @@ class Parser(object):
                 return config.Bind(host, port, attributes)
 
     def build_backend(self, backend_node):
-        """parse `backend` sections, and return a config.Backend"""
-        pass
+        """parse `backend` sections
+
+        Args:
+            backend_node (TreeNode): Description
+
+        Returns:
+            config.Backend: an object
+        """
+        proxy_name = backend_node.backend_header.proxy_name.text
+        config_block_dict = self.build_config_block(backend_node.config_block)
+        return config.Backend(
+            name=proxy_name, options=config_block_dict['options'],
+            configs=config_block_dict['configs'],
+            servers=config_block_dict['servers'])
 
     def __read_string_from_file(self, filepath):
         filestring = ''

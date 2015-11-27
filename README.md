@@ -18,7 +18,7 @@ $ source pyhaproxy/bin/activate
 # Example
 Here is the simple example to show how to use it.
 ```python
-#!/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf8 -*-
 
 import config

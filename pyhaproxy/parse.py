@@ -42,7 +42,6 @@ class Parser(object):
                 configration.defaults.append(
                     self.build_defaults(section_node))
             elif isinstance(section_node, pegnode.ListenSection):
-
                 configration.listens.append(
                     self.build_listen(section_node))
             elif isinstance(section_node, pegnode.UserlistSection):
@@ -109,7 +108,14 @@ class Parser(object):
         return config.Server(server_name, host, port, server_attributes)
 
     def build_defaults(self, defaults_node):
-        """parse `defaults` sections, and return a config.Defaults"""
+        """parse `defaults` sections, and return a config.Defaults
+
+        Args:
+            defaults_node (TreeNode): Description
+
+        Returns:
+            (config.Defaults): an object
+        """
         name = defaults_node.defaults_header.proxy_name.text
         config_block_dict = self.build_config_block(defaults_node.config_block)
         return config.Defaults(
@@ -120,7 +126,14 @@ class Parser(object):
         pass
 
     def build_listen(self, listen_node):
-        """parse `listen` sections, and return a config.Listen"""
+        """parse `listen` sections, and return a config.Listen
+
+        Args:
+            listen_node (TreeNode): Description
+
+        Returns:
+            (config.Defaults): an object
+        """
         pass
 
     def build_frontend(self, frontend_node):

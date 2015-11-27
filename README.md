@@ -45,10 +45,10 @@ for frontend in configration.frontends:
 - [x] ~~Parse `global` section~~
 - [x] ~~Parse `frontend` sections~~
 - [x] ~~Parse `bind` config lines~~
-- [ ] Parse `backend` sections
-- [ ] Parse `defaults` sections
+- [x] ~~Parse `backend` sections~~
+- [x] ~~Parse `defaults` sections~~
 - [ ] Parse `userlist` sections
-- [ ] Parse `listen` sections
+- [x] ~~Parse `listen` sections~~
 - [ ] Parse `acl` config lines
 - [ ] Parse `use_backend` and `default_backend` config lines
 - [ ] Link `backend` with `frontend` by `acl`

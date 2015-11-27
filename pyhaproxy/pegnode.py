@@ -111,6 +111,7 @@ class BackendHeader(TreeNode):
         self.whitespace = elements[4]
         self.proxy_name = elements[3]
         self.line_break = elements[7]
+        self.value = elements[5]
 
 
 class ServerLine(TreeNode):

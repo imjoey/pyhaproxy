@@ -141,6 +141,7 @@ class BindLine(TreeNode):
         self.whitespace = elements[4]
         self.service_address = elements[3]
         self.line_break = elements[7]
+        self.value = elements[5]
 
 
 class AclLine(TreeNode):
@@ -152,14 +153,15 @@ class AclLine(TreeNode):
         self.value = elements[5]
 
 
-class BackendLine(TreeNode):
+class UseBackendLine(TreeNode):
     def __init__(self, text, offset, elements):
-        super(BackendLine, self).__init__(text, offset, elements)
+        super(UseBackendLine, self).__init__(text, offset, elements)
         self.whitespace = elements[6]
         self.backend_name = elements[3]
         self.line_break = elements[9]
         self.operator = elements[5]
         self.backend_condition = elements[7]
+        self.backendtype = elements[1]
 
 
 class CommentLine(TreeNode):
@@ -1681,7 +1683,7 @@ class Grammar(object):
         if elements0 is None:
             address0 = FAILURE
         else:
-            address0 = BackendLine(self._input[index1:self._offset], index1, elements0)
+            address0 = UseBackendLine(self._input[index1:self._offset], index1, elements0)
             self._offset = self._offset
         self._cache['backend_line'][index0] = (address0, self._offset)
         return address0

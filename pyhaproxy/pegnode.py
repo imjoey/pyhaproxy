@@ -82,6 +82,7 @@ class DefaultsHeader(TreeNode):
         super(DefaultsHeader, self).__init__(text, offset, elements)
         self.whitespace = elements[4]
         self.line_break = elements[6]
+        self.proxy_name = elements[3]
 
 
 class ListenHeader(TreeNode):

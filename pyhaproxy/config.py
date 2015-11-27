@@ -129,7 +129,9 @@ class Acl(object):
 
 
 class UseBackend(object):
-    def __init__(self, backend_name, operator, backend_condition):
+    def __init__(self, backend_name, operator,
+                 backend_condition, is_default=False):
         self.backend_name = backend_name
         self.operator = operator
         self.backend_condition = backend_condition
+        self.is_default = is_default

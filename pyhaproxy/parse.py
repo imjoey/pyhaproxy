@@ -42,6 +42,7 @@ class Parser(object):
                 configration.defaults.append(
                     self.build_defaults(section_node))
             elif isinstance(section_node, pegnode.ListenSection):
+
                 configration.listens.append(
                     self.build_listen(section_node))
             elif isinstance(section_node, pegnode.UserlistSection):
@@ -109,7 +110,10 @@ class Parser(object):
 
     def build_defaults(self, defaults_node):
         """parse `defaults` sections, and return a config.Defaults"""
-        pass
+        name = defaults_node.defaults_header.proxy_name.text
+        config_block_dict = self.build_config_block(defaults_node.config_block)
+        return config.Defaults(
+            name, config_block_dict['options'], config_block_dict['configs'])
 
     def build_userlist(self, userlist_node):
         """parse `userlist` sections, and return a config.Userlist"""

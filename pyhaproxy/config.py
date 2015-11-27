@@ -54,7 +54,7 @@ class Global(object):
         self.options = options or []
 
 
-class Default(object):
+class Defaults(object):
     def __init__(self, name, options, configs):
         self.name = name
         self.configs = configs or []

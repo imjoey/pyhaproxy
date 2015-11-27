@@ -26,7 +26,7 @@ class Configration(object):
             if listen.name == name:
                 return listen
 
-    def defaults(self, name):
+    def default(self, name):
         for default in self.defaults:
             if default.name == name:
                 return default
@@ -42,50 +42,72 @@ class Configration(object):
                 return frontend
 
 
-class Global(object):
-    """Represens a `global` section
+class HasConfigBlock(object):
 
-    Attributes:
-        config_block (dict):
-    """
     def __init__(self, config_block):
-        super(Global, self).__init__()
+        super(HasConfigBlock, self).__init__()
         self.config_block = config_block
 
+    def options(self):
+        return self.config_block['options']
 
-class Defaults(object):
+    def configs(self):
+        return self.config_block['configs']
+
+    def servers(self):
+        return self.config_block['servers']
+
+    def server(self, name):
+        for a_server in self.servers():
+            if a_server.name == name:
+                return a_server
+
+    def binds(self):
+        return self.config_block['binds']
+
+    def acls(self):
+        return self.config_block['acls']
+
+    def acl(self, name):
+        for a_acl in self.acls():
+            if a_acl.name == name:
+                return a_acl
+
+
+class Global(HasConfigBlock):
+    """Represens a `global` section
+    """
+    pass
+
+
+class Defaults(HasConfigBlock):
+
     def __init__(self, name, config_block):
-        super(Defaults, self).__init__()
+        super(Defaults, self).__init__(config_block)
         self.name = name
-        self.config_block = config_block
 
 
-class Backend(object):
-    '''
-        `backend` section
-    '''
+class Backend(HasConfigBlock):
+
     def __init__(self, name, config_block):
-        super(Backend, self).__init__()
+        super(Backend, self).__init__(config_block)
         self.name = name
-        self.config_block = config_block
 
 
-class Listen(object):
+class Listen(HasConfigBlock):
     def __init__(self, name, host, port, config_block):
-        super(Listen, self).__init__()
+        super(Listen, self).__init__(config_block)
         self.name = name
         self.host = host
         self.port = port
-        self.config_block = config_block
 
 
-class Frontend(object):
+class Frontend(HasConfigBlock):
     def __init__(self, name, host, port, config_block):
-        super(Frontend, self).__init__()
+        super(Frontend, self).__init__(config_block)
         self.name = name
         self.host = host
         self.port = port
-        self.config_block = config_block
 
 
 class Server(object):
@@ -109,6 +131,9 @@ class Acl(object):
     def __init__(self, name, value):
         self.name = name
         self.value = value
+
+    def __str__(self):
+        return 'acl: %s -> %s' % (self.name, self.value)
 
 
 class UseBackend(object):

@@ -219,7 +219,6 @@ class Parser(object):
             host = service_address_node.host.text
             port = service_address_node.port.text
         else:
-            print config_block_dict['binds']
             # use `bind` in config lines to fill in host and port
             # just use the first
             for bind in config_block_dict['binds']:

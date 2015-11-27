@@ -44,3 +44,9 @@ class TestParse(object):
             print listen.name, listen.host, listen.port
             print listen.options
             print listen.configs
+
+    def test_parse_backend_section(self):
+        for backend in self.configration.backends:
+            print backend.name
+            print backend.options
+            print backend.configs

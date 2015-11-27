@@ -29,14 +29,14 @@ configration = parser.build_configration()
 
 # print global section
 print configration.globall
-print configration.globall.configs
-print configration.globall.options
+print configration.globall.configs()
+print configration.globall.options()
 
 # print frontend sections
 for frontend in configration.frontends:
     print frontend.name, frontend.host, frontend.port
-    print frontend.configs
-    print frontend.options
+    print frontend.configs()
+    print frontend.options()
     print '-' * 30
 
 ```

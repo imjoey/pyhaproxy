@@ -38,3 +38,9 @@ class TestParse(object):
             print defaults.name
             print defaults.options
             print defaults.configs
+
+    def test_parse_listen_section(self):
+        for listen in self.configration.listens:
+            print listen.name, listen.host, listen.port
+            print listen.options
+            print listen.configs

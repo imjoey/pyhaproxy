@@ -91,6 +91,8 @@ class ListenHeader(TreeNode):
         self.whitespace = elements[4]
         self.proxy_name = elements[3]
         self.line_break = elements[8]
+        self.service_address = elements[5]
+        self.value = elements[6]
 
 
 class FrontendHeader(TreeNode):

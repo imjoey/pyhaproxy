@@ -116,10 +116,10 @@ class Parser(object):
         Returns:
             (config.Defaults): an object
         """
-        name = defaults_node.defaults_header.proxy_name.text
+        proxy_name = defaults_node.defaults_header.proxy_name.text
         config_block_dict = self.build_config_block(defaults_node.config_block)
         return config.Defaults(
-            name, config_block_dict['options'], config_block_dict['configs'])
+            proxy_name, config_block_dict['options'], config_block_dict['configs'])
 
     def build_userlist(self, userlist_node):
         """parse `userlist` sections, and return a config.Userlist"""
@@ -134,12 +134,33 @@ class Parser(object):
         Returns:
             (config.Defaults): an object
         """
-        pass
+        proxy_name = listen_node.listen_header.proxy_name.text
+        service_address_node = listen_node.listen_header.service_address
+
+        # parse the config block
+        config_block_dict = self.build_config_block(listen_node.config_block)
+
+        # parse host and port
+        host, port = '', ''
+        if isinstance(service_address_node, pegnode.ServiceAddress):
+            host = service_address_node.host.text
+            port = service_address_node.port.text
+        else:
+            # use `bind` in config lines to fill in host and port
+            bind = self.build_bind(listen_node.config_block)
+            if bind:
+                host, port = bind.host, bind.port
+            else:
+                raise Exception(
+                    'Not specify host and port in `frontend` definition')
+        return config.Listen(
+            proxy_name, host, port,
+            config_block_dict['options'], config_block_dict['configs'])
 
     def build_frontend(self, frontend_node):
         """parse `frontend` sections, and return a config.Frontend"""
         proxy_name = frontend_node.frontend_header.proxy_name.text
-        service_address = frontend_node.frontend_header.service_address
+        service_address_node = frontend_node.frontend_header.service_address
 
         # parse the config block
         config_block_dict = self.build_config_block(
@@ -147,9 +168,11 @@ class Parser(object):
 
         # parse host and port
         host, port = '', ''
-        if isinstance(service_address, pegnode.ServiceAddress):
-            host, port = service_address.host.text, service_address.port.text
+        if isinstance(service_address_node, pegnode.ServiceAddress):
+            host = service_address_node.host.text
+            port = service_address_node.port.text
         else:
+            # use `bind` in config lines to fill in host and port
             bind = self.build_bind(frontend_node.config_block)
             if bind:
                 host, port = bind.host, bind.port

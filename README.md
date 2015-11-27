@@ -49,8 +49,8 @@ for frontend in configration.frontends:
 - [x] ~~Parse `defaults` sections~~
 - [ ] Parse `userlist` sections
 - [x] ~~Parse `listen` sections~~
-- [ ] Parse `acl` config lines
-- [ ] Parse `use_backend` and `default_backend` config lines
+- [x] Parse `acl` config lines
+- [x] Parse `use_backend` and `default_backend` config lines
 - [ ] Link `backend` with `frontend` by `acl`
 - [ ] Render `global` section
 - [ ] Render `frontend` section

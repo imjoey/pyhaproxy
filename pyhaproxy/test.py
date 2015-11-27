@@ -32,3 +32,9 @@ class TestParse(object):
             print frontend.configs
             print frontend.options
             print '-' * 30
+
+    def test_parse_defaults_section(self):
+        for defaults in self.configration.defaults:
+            print defaults.name
+            print defaults.options
+            print defaults.configs

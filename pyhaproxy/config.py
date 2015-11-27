@@ -76,10 +76,11 @@ class Backend(HasServer):
         `backend` section
     '''
     def __init__(self, name, options, configs, servers):
-        super(Backend, self).__init(servers)
+        super(Backend, self).__init__(servers)
         self.name = name
         self.options = options or []
         self.configs = configs or []
+        self.servers = servers or []
 
 
 class Listen(HasServer):

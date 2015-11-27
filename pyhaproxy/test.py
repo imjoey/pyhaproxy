@@ -22,31 +22,31 @@ class TestParse(object):
         pass
 
     def test_parse_global_section(self):
-        print self.configration.globall.configs
+        print self.configration.globall.configs()
         print '-' * 30
-        print self.configration.globall.options
+        print self.configration.globall.options()
 
     def test_parse_frontend_section(self):
         for frontend in self.configration.frontends:
+            print '-' * 15
             print frontend.name, frontend.host, frontend.port
-            print frontend.configs
-            print frontend.options
-            print '-' * 30
+            for acl in frontend.acls():
+                print acl
 
     def test_parse_defaults_section(self):
         for defaults in self.configration.defaults:
             print defaults.name
-            print defaults.options
-            print defaults.configs
+            print defaults.options()
+            print defaults.configs()
 
     def test_parse_listen_section(self):
         for listen in self.configration.listens:
             print listen.name, listen.host, listen.port
-            print listen.options
-            print listen.configs
+            print listen.options()
+            print listen.configs()
 
     def test_parse_backend_section(self):
         for backend in self.configration.backends:
             print backend.name
-            print backend.options
-            print backend.configs
+            print backend.options()
+            print backend.configs()

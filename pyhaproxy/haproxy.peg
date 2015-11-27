@@ -26,11 +26,17 @@ frontend_header     <-      whitespace "frontend" whitespace proxy_name whitespa
 
 backend_header      <-      whitespace "backend" whitespace proxy_name whitespace value? comment_text? line_break
 
-config_block        <-      (server_line / option_line / config_line / comment_line / blank_line)*
+config_block        <-      (server_line / option_line / bind_line / acl_line / backend_line / config_line / comment_line / blank_line)*
 
 server_line         <-      whitespace "server" whitespace server_name whitespace service_address value? comment_text? line_break
 
 option_line         <-      whitespace "option" whitespace keyword whitespace value? comment_text? line_break
+
+bind_line           <-      whitespace "bind" whitespace service_address whitespace value? comment_text? line_break
+
+acl_line            <-      whitespace "acl" whitespace acl_name whitespace value? comment_text? line_break
+
+backend_line        <-      whitespace ("use_backend" / "default_backend") whitespace backend_name whitespace ("if" / "unless")* whitespace backend_condition? comment_text? line_break
 
 config_line         <-      whitespace !("defaults" / "global" / "listen" / "frontend" / "backend") keyword whitespace value? comment_text? line_break
 
@@ -45,6 +51,12 @@ line_break          <-      [\n]
 keyword             <-      (("errorfile" / "timeout") whitespace)? [a-z0-9\-\_\.]+
 
 server_name         <-      [a-zA-z0-9\-\_\.:]+
+
+acl_name            <-      [a-zA-z0-9\-\_\.:]+
+
+backend_name        <-      [a-zA-z0-9\-\_\.:]+
+
+backend_condition   <-      [^#\n]+
 
 service_address     <-      host [:]? port
 

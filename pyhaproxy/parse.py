@@ -2,7 +2,6 @@
 # -*- coding: utf8 -*-
 
 import os
-import re
 from collections import defaultdict
 
 import pegnode
@@ -65,23 +64,23 @@ class Parser(object):
             config.Global: an object
         """
         config_block_dict = self.build_config_block(
-            global_node.config_block, with_server=False)
-        return config.Global(
-            configs=config_block_dict['configs'],
-            options=config_block_dict['options'])
+            global_node.config_block)
+        return config.Global(config_block=config_block_dict)
 
-    def build_config_block(self, config_block_node, with_server=True):
+    def build_config_block(self, config_block_node):
         """parse `config_block` in each section
 
         Args:
             config_block_node (TreeNode): Description
-            with_server (bool): determines if to parse server_lines
 
         Returns:
-            ({'configs': list(dict),
+            {'configs': list(dict),
               'options': list(dict),
-              'servers': list(dict)}
-            ):
+              'servers': list(dict),
+              'binds': list(config.Bind),
+              'acls': list(config.Acl),
+              'usebackends': list(config.UseBackend)
+            }:
                 the <configs, options, servers> in `config_block`
         """
         config_block_dict = defaultdict(list)
@@ -93,9 +92,21 @@ class Parser(object):
             elif isinstance(line_node, pegnode.OptionLine):
                 config_block_dict['options'].append(
                     dict([(line_node.keyword.text, line_node.value.text)]))
-            elif isinstance(line_node, pegnode.ServerLine) and with_server:
+            elif isinstance(line_node, pegnode.ServerLine):
                 config_block_dict['servers'].append(
                     self.build_server(line_node))
+            elif isinstance(line_node, pegnode.BindLine):
+                config_block_dict['binds'].append(
+                    self.build_bind(line_node))
+            elif isinstance(line_node, pegnode.AclLine):
+                config_block_dict['acls'].append(
+                    self.build_acl(line_node))
+            elif isinstance(line_node, pegnode.BackendLine):
+                config_block_dict['usebackends'].append(
+                    self.build_usebackend(line_node))
+            else:
+                # may blank_line, comment_line
+                pass
         return config_block_dict
 
     def build_server(self, server_node):
@@ -110,6 +121,28 @@ class Parser(object):
             name=server_name, host=host, port=port,
             attributes=server_attributes)
 
+    def build_bind(self, bind_node):
+        service_address = bind_node.service_address
+        return config.Bind(
+            host=service_address.host.text,
+            port=service_address.port.text,
+            attributes=bind_node.value.text.split(' \t'))
+
+    def build_acl(self, acl_node):
+        acl_name = acl_node.acl_name.text
+        acl_value = acl_node.value.text
+        return config.Acl(name=acl_name, value=acl_value)
+
+    def build_usebackend(self, usebackend_node):
+        operator = usebackend_node.operator.text
+        backendtype = usebackend_node.backendtype.text
+
+        return config.UseBackend(
+            backend_name=usebackend_node.backend_name.text,
+            operator=operator,
+            backend_condition=usebackend_node.backend_condition.text,
+            is_default=(backendtype == 'default_backend'))
+
     def build_defaults(self, defaults_node):
         """parse `defaults` sections, and return a config.Defaults
 
@@ -121,10 +154,8 @@ class Parser(object):
         """
         proxy_name = defaults_node.defaults_header.proxy_name.text
         config_block_dict = self.build_config_block(
-            defaults_node.config_block, with_server=False)
-        return config.Defaults(
-            name=proxy_name, options=config_block_dict['options'],
-            configs=config_block_dict['configs'])
+            defaults_node.config_block)
+        return config.Defaults(name=proxy_name, config_block=config_block_dict)
 
     def build_userlist(self, userlist_node):
         """parse `userlist` sections, and return a config.Userlist"""
@@ -146,25 +177,22 @@ class Parser(object):
         config_block_dict = self.build_config_block(listen_node.config_block)
 
         # parse host and port
-        host, port, use_bind = '', '', False
+        host, port = '', ''
         if isinstance(service_address_node, pegnode.ServiceAddress):
             host = service_address_node.host.text
             port = service_address_node.port.text
         else:
             # use `bind` in config lines to fill in host and port
-            bind = self.build_bind(listen_node.config_block)
-            if bind:
+            # just use the first
+            for bind in config_block_dict['binds']:
                 host, port = bind.host, bind.port
-                use_bind = True
+                break
             else:
                 raise Exception(
-                    'Not specify host and port in `frontend` definition')
+                    'Not specify host and port in `listen` definition')
         return config.Listen(
             name=proxy_name, host=host, port=port,
-            options=config_block_dict['options'],
-            configs=config_block_dict['configs'],
-            servers=config_block_dict['servers'],
-            use_bind=use_bind)
+            config_block=config_block_dict)
 
     def build_frontend(self, frontend_node):
         """parse `frontend` sections, and return a config.Frontend
@@ -183,46 +211,25 @@ class Parser(object):
 
         # parse the config block
         config_block_dict = self.build_config_block(
-            frontend_node.config_block, with_server=False)
+            frontend_node.config_block)
 
         # parse host and port
-        host, port, use_bind = '', '', False
+        host, port = '', ''
         if isinstance(service_address_node, pegnode.ServiceAddress):
             host = service_address_node.host.text
             port = service_address_node.port.text
         else:
             # use `bind` in config lines to fill in host and port
-            bind = self.build_bind(frontend_node.config_block)
-            if bind:
+            # just use the first
+            for bind in config_block_dict['binds']:
                 host, port = bind.host, bind.port
-                use_bind = True
+                break
             else:
                 raise Exception(
                     'Not specify host and port in `frontend` definition')
         return config.Frontend(
             name=proxy_name, host=host, port=port,
-            options=config_block_dict['options'],
-            configs=config_block_dict['configs'],
-            use_bind=use_bind)
-
-    def build_bind(self, config_block):
-        """parse `bind` line in config block for host and port
-
-        Args:
-            config_block (TreeNode): the whole config block treenode
-
-        Returns:
-            config.Bind: an object
-        """
-        bind_re_str = r'[ \t]*bind[ \t]+(?P<host>[a-zA-Z0-9\.]*)[:]*(?P<port>[\d]*)[ \t]+(?P<attributes>[^#\n]*)'
-        bind_pattern = re.compile(bind_re_str)
-        for ele in config_block:
-            match_group = bind_pattern.match(ele.text)
-            if match_group:
-                attributes = match_group.group('attributes').split(' \t')
-                host = match_group.group('host')
-                port = match_group.group('port')
-                return config.Bind(host, port, attributes)
+            config_block=config_block_dict)
 
     def build_backend(self, backend_node):
         """parse `backend` sections
@@ -235,10 +242,7 @@ class Parser(object):
         """
         proxy_name = backend_node.backend_header.proxy_name.text
         config_block_dict = self.build_config_block(backend_node.config_block)
-        return config.Backend(
-            name=proxy_name, options=config_block_dict['options'],
-            configs=config_block_dict['configs'],
-            servers=config_block_dict['servers'])
+        return config.Backend(name=proxy_name, config_block=config_block_dict)
 
     def __read_string_from_file(self, filepath):
         filestring = ''

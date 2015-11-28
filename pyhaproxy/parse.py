@@ -63,11 +63,11 @@ class Parser(object):
         Returns:
             config.Global: an object
         """
-        config_block_dict = self.build_config_block(
+        config_block_dict = self.__build_config_block(
             global_node.config_block)
         return config.Global(config_block=config_block_dict)
 
-    def build_config_block(self, config_block_node):
+    def __build_config_block(self, config_block_node):
         """parse `config_block` in each section
 
         Args:
@@ -94,54 +94,20 @@ class Parser(object):
                     dict([(line_node.keyword.text, line_node.value.text)]))
             elif isinstance(line_node, pegnode.ServerLine):
                 config_block_dict['servers'].append(
-                    self.build_server(line_node))
+                    self.__build_server(line_node))
             elif isinstance(line_node, pegnode.BindLine):
                 config_block_dict['binds'].append(
-                    self.build_bind(line_node))
+                    self.__build_bind(line_node))
             elif isinstance(line_node, pegnode.AclLine):
                 config_block_dict['acls'].append(
-                    self.build_acl(line_node))
+                    self.__build_acl(line_node))
             elif isinstance(line_node, pegnode.BackendLine):
                 config_block_dict['usebackends'].append(
-                    self.build_usebackend(line_node))
+                    self.__build_usebackend(line_node))
             else:
                 # may blank_line, comment_line
                 pass
         return config_block_dict
-
-    def build_server(self, server_node):
-        server_name = server_node.server_name.text
-        host = server_node.service_address.host.text
-        port = server_node.service_address.port.text
-
-        # parse server attributes, value is similar to \
-        # 'maxconn 1024 weight 3 check inter 2000 rise 2 fall 3'
-        server_attributes = server_node.value.text.split(' \t')
-        return config.Server(
-            name=server_name, host=host, port=port,
-            attributes=server_attributes)
-
-    def build_bind(self, bind_node):
-        service_address = bind_node.service_address
-        return config.Bind(
-            host=service_address.host.text,
-            port=service_address.port.text,
-            attributes=bind_node.value.text.split(' \t'))
-
-    def build_acl(self, acl_node):
-        acl_name = acl_node.acl_name.text
-        acl_value = acl_node.value.text
-        return config.Acl(name=acl_name, value=acl_value)
-
-    def build_usebackend(self, usebackend_node):
-        operator = usebackend_node.operator.text
-        backendtype = usebackend_node.backendtype.text
-
-        return config.UseBackend(
-            backend_name=usebackend_node.backend_name.text,
-            operator=operator,
-            backend_condition=usebackend_node.backend_condition.text,
-            is_default=(backendtype == 'default_backend'))
 
     def build_defaults(self, defaults_node):
         """parse `defaults` sections, and return a config.Defaults
@@ -153,7 +119,7 @@ class Parser(object):
             config.Defaults: an object
         """
         proxy_name = defaults_node.defaults_header.proxy_name.text
-        config_block_dict = self.build_config_block(
+        config_block_dict = self.__build_config_block(
             defaults_node.config_block)
         return config.Defaults(name=proxy_name, config_block=config_block_dict)
 
@@ -174,7 +140,7 @@ class Parser(object):
         service_address_node = listen_node.listen_header.service_address
 
         # parse the config block
-        config_block_dict = self.build_config_block(listen_node.config_block)
+        config_block_dict = self.__build_config_block(listen_node.config_block)
 
         # parse host and port
         host, port = '', ''
@@ -210,7 +176,7 @@ class Parser(object):
         service_address_node = frontend_node.frontend_header.service_address
 
         # parse the config block
-        config_block_dict = self.build_config_block(
+        config_block_dict = self.__build_config_block(
             frontend_node.config_block)
 
         # parse host and port
@@ -241,8 +207,43 @@ class Parser(object):
             config.Backend: an object
         """
         proxy_name = backend_node.backend_header.proxy_name.text
-        config_block_dict = self.build_config_block(backend_node.config_block)
+        config_block_dict = self.__build_config_block(
+            backend_node.config_block)
         return config.Backend(name=proxy_name, config_block=config_block_dict)
+
+    def __build_server(self, server_node):
+        server_name = server_node.server_name.text
+        host = server_node.service_address.host.text
+        port = server_node.service_address.port.text
+
+        # parse server attributes, value is similar to \
+        # 'maxconn 1024 weight 3 check inter 2000 rise 2 fall 3'
+        server_attributes = server_node.value.text.split(' \t')
+        return config.Server(
+            name=server_name, host=host, port=port,
+            attributes=server_attributes)
+
+    def __build_bind(self, bind_node):
+        service_address = bind_node.service_address
+        return config.Bind(
+            host=service_address.host.text,
+            port=service_address.port.text,
+            attributes=bind_node.value.text.split(' \t'))
+
+    def __build_acl(self, acl_node):
+        acl_name = acl_node.acl_name.text
+        acl_value = acl_node.value.text
+        return config.Acl(name=acl_name, value=acl_value)
+
+    def __build_usebackend(self, usebackend_node):
+        operator = usebackend_node.operator.text
+        backendtype = usebackend_node.backendtype.text
+
+        return config.UseBackend(
+            backend_name=usebackend_node.backend_name.text,
+            operator=operator,
+            backend_condition=usebackend_node.backend_condition.text,
+            is_default=(backendtype == 'default_backend'))
 
     def __read_string_from_file(self, filepath):
         filestring = ''

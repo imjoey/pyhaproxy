@@ -3,13 +3,19 @@ It's a Python library to parse haproxy config file. Thanks to [canopy](https://g
 
 # Install
 This project uses nose for unit testing, but with no more Python libraries dependencies for running.
+
 * Suppose that you have virtualenv installed, if not, please go [here](https://virtualenv.readthedocs.org/en/latest/installation.html) to install
 * Create a virutalenv and activate it,
 ```bash
 $ virtualenv --no-site-packages pyhaproxy
 $ source pyhaproxy/bin/activate
 ```
-* Clone code
+* User pip or setuptools to install it
+```bash
+$ pip install pyhaproxy
+
+$ easy_install pyhaproxy
+```
 * Install dependencies
 ```bash
 (pyhaproxy)$ pip install -r requirements.txt

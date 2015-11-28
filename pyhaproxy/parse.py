@@ -4,8 +4,8 @@
 import os
 from collections import defaultdict
 
-import pegnode
-import config
+from pyhaproxy import pegnode
+from pyhaproxy import config
 
 
 class Parser(object):

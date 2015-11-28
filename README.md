@@ -52,12 +52,12 @@ for frontend in configration.frontends:
 - [x] Parse `acl` config lines
 - [x] Parse `use_backend` and `default_backend` config lines
 - [ ] Link `backend` with `frontend` by `acl`
-- [ ] Render `global` section
-- [ ] Render `frontend` section
-- [ ] Render `backend` sections
-- [ ] Render `defaults` sections
+- [x] ~~Render `global` section~~
+- [x] ~~Render `frontend` section~~
+- [x] ~~Render `backend` sections~~
+- [x] ~~Render `defaults` sections~~
 - [ ] Render `userlist` sections
-- [ ] Render `listen` sections
+- [x] ~~Render `listen` sections~~
 
 # Unittest
 Use nose unit test framework

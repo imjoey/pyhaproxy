@@ -121,10 +121,24 @@ class Server(object):
 
 
 class Bind(object):
+    """Represents the `bind` line
+
+    Attributes:
+        attributes (str):
+        host (srt):
+        port (list): Description
+    """
     def __init__(self, host, port, attributes):
         self.host = host
         self.port = port
         self.attributes = attributes or []
+
+    def __str__(self):
+        return self.render()
+
+    def render(self):
+        return '    bind %s:%s %s' % (
+            self.host, self.port, ' '.join(self.attributes))
 
 
 class Acl(object):

@@ -20,38 +20,38 @@ class Parser(object):
         if not self.filestring:
             raise Exception('error reading from file %s' % filepath)
 
-    def build_configration(self):
+    def build_configuration(self):
         """Parse the haproxy config file
 
         Raises:
             Exception: when there are unsupported section
 
         Returns:
-            config.Configration: haproxy config object
+            config.Configuration: haproxy config object
         """
         self.pegtree = pegnode.parse(self.filestring)
-        configration = config.Configration(self.pegtree)
+        configuration = config.Configuration(self.pegtree)
         for section_node in self.pegtree:
             if isinstance(section_node, pegnode.GlobalSection):
-                configration.globall = self.build_global(section_node)
+                configuration.globall = self.build_global(section_node)
             elif isinstance(section_node, pegnode.FrontendSection):
-                configration.frontends.append(
+                configuration.frontends.append(
                     self.build_frontend(section_node))
             elif isinstance(section_node, pegnode.DefaultsSection):
-                configration.defaults.append(
+                configuration.defaults.append(
                     self.build_defaults(section_node))
             elif isinstance(section_node, pegnode.ListenSection):
-                configration.listens.append(
+                configuration.listens.append(
                     self.build_listen(section_node))
             elif isinstance(section_node, pegnode.UserlistSection):
-                configration.userlists.append(
+                configuration.userlists.append(
                     self.build_userlist(section_node))
             elif isinstance(section_node, pegnode.BackendSection):
-                configration.backends.append(
+                configuration.backends.append(
                     self.build_backend(section_node))
             else:
                 raise Exception('Unsupported section')
-        return configration
+        return configuration
 
     def build_global(self, global_node):
 

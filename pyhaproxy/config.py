@@ -2,16 +2,11 @@
 # -*- coding: utf-8 -*-
 
 
-class Configration(object):
+class Configuration(object):
     """Represents a whole haproxy config file
 
     Attributes:
-        backends (list): the `backend` sections
-        defaults (list): the `defaults` sections
-        frontends (list): the `frontend` sections
-        globall (config.Global): the `global` section
-        listens (list): the `listen` sections
-        pegtree (TYPE): the original parsing pegtree
+        pegtree (TreeNode): the original parsing pegtree
     """
     def __init__(self, pegtree):
         self.pegtree = pegtree

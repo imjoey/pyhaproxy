@@ -16,7 +16,7 @@ class TestParse(object):
 
     def setup(self):
         self.parser = parse.Parser('haproxy.cfg')
-        self.configration = self.parser.build_configration()
+        self.configration = self.parser.build_configuration()
 
     def teardown(self):
         pass

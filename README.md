@@ -1,6 +1,7 @@
 # Pyhaproxy
 It's a Python library to parse haproxy config file. Thanks to [canopy](https://github.com/jcoglan/canopy), which I use for auto-generating Python codes by PEG grammar. But the 'Extension methods for node' feature in canopy seems broken, I always encounter the MRO errors when running `parse` function. So I modify the generated codes which mainly rename the `TreeNode*` to specified treenode name, eg: GlobalSection, GlobalHeader, BackendHeader, and also complement missing attributes.
 
+
 # Install
 This project uses nose for unit testing, but with no more Python libraries dependencies for running.
 
@@ -16,17 +17,19 @@ $ source pyhaproxy/bin/activate
 (pyhaproxy)$ pip install -r requirements.txt
 ```
 
+
 # Example
 Here is the simple example to show how to use it.
+
 ```python
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-import config
-import parse
+from haproxy.parse import Parser
+from haproxy.render import Render
 
-parser = parse.Parser('haproxy.cfg')
-configration = parser.build_configration()
+cfg_parser = Parser('haproxy.cfg')
+configration = cfg_parser.build_configration()
 
 # print global section
 print configration.globall
@@ -40,7 +43,11 @@ for frontend in configration.frontends:
     print frontend.options()
     print '-' * 30
 
+cfg_render = Render(self.configration)
+cfg_render.dumps_to('./hatest.cfg')  # you will see hatest.cfg which is same to the `haproxy.cfg` parsed previously
+
 ```
+
 
 # TODO
 - [x] ~~Parse `global` section~~
@@ -59,6 +66,7 @@ for frontend in configration.frontends:
 - [x] ~~Render `defaults` sections~~
 - [ ] Render `userlist` sections
 - [x] ~~Render `listen` sections~~
+
 
 # Unittest
 Use nose unit test framework

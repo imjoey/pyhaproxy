@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import parse
+import render
 
 
 class TestParse(object):
@@ -50,3 +51,8 @@ class TestParse(object):
             print backend.name
             print backend.options()
             print backend.configs()
+
+    def test_render(self):
+        self.render = render.Render(self.configration)
+        self.render.dumps_to(
+            './hatest.cfg')

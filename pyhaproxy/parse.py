@@ -74,9 +74,9 @@ class Parser(object):
             config_block_node (TreeNode): Description
 
         Returns:
-            {'configs': list(dict),
-              'options': list(dict),
-              'servers': list(dict),
+            {'configs': list(tuple),
+              'options': list(tuple),
+              'servers': list(config.Server),
               'binds': list(config.Bind),
               'acls': list(config.Acl),
               'usebackends': list(config.UseBackend)
@@ -88,10 +88,10 @@ class Parser(object):
         for line_node in config_block_node:
             if isinstance(line_node, pegnode.ConfigLine):
                 config_block_dict['configs'].append(
-                    dict([(line_node.keyword.text, line_node.value.text)]))
+                    (line_node.keyword.text, line_node.value.text))
             elif isinstance(line_node, pegnode.OptionLine):
                 config_block_dict['options'].append(
-                    dict([(line_node.keyword.text, line_node.value.text)]))
+                    (line_node.keyword.text, line_node.value.text))
             elif isinstance(line_node, pegnode.ServerLine):
                 config_block_dict['servers'].append(
                     self.__build_server(line_node))
@@ -249,6 +249,5 @@ class Parser(object):
         filestring = ''
         if os.path.exists(filepath):
             with open(filepath) as f:
-                for line in f:
-                    filestring = filestring + line
+                filestring = f.read()
         return filestring

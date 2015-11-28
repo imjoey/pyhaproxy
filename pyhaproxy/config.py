@@ -111,7 +111,14 @@ class Frontend(HasConfigBlock):
 
 
 class Server(object):
+    """Represents the `server` line in config block
 
+    Attributes:
+        attributes (list): Description
+        host (str): Description
+        name (str): Description
+        port (str): Description
+    """
     def __init__(self, name, host, port, attributes):
         super(Server, self).__init__()
         self.name = name
@@ -119,41 +126,74 @@ class Server(object):
         self.port = port
         self.attributes = attributes or []
 
+    def render(self):
+        return '    server    %s    %s:%s    %s\n' % (
+            self.name, self.host, self.port, ' '.join(self.attributes))
+
+    def __str__(self):
+        return self.render()
+
 
 class Bind(object):
-    """Represents the `bind` line
+    """Represents the `bind` line in config block
 
     Attributes:
         attributes (str):
         host (srt):
-        port (list): Description
+        port (list):
     """
     def __init__(self, host, port, attributes):
         self.host = host
         self.port = port
         self.attributes = attributes or []
 
+    def render(self):
+        return '    bind    %s:%s    %s\n' % (
+            self.host, self.port, ' '.join(self.attributes))
+
     def __str__(self):
         return self.render()
 
-    def render(self):
-        return '    bind %s:%s %s' % (
-            self.host, self.port, ' '.join(self.attributes))
-
 
 class Acl(object):
+    """Represents the `acl` line in config block
+
+    Attributes:
+        name (str):
+        value (str):
+    """
     def __init__(self, name, value):
         self.name = name
         self.value = value
 
+    def render(self):
+        return '    acl    %s    %s\n' % (self.name, self.value)
+
     def __str__(self):
-        return 'acl: %s -> %s' % (self.name, self.value)
+        return self.render()
 
 
 class UseBackend(object):
+    """Represents the `use_backend` or `default_backend` line in config block
+
+    Attributes:
+        backend_condition (str): Description
+        backend_name (str): Description
+        is_default (bool): Description
+        operator (str): Description
+    """
     def __init__(self, backend_name, operator,
                  backend_condition, is_default=False):
         self.backend_name = backend_name
         self.operator = operator
         self.backend_condition = backend_condition
         self.is_default = is_default
+
+    def render(self):
+        backendtype = 'default_backend' if self.is_default else 'use_backend'
+        return '    %s    %s    %s    %s\n' % (
+            backendtype, self.backend_name,
+            self.operator, self.backend_condition)
+
+    def __str__(self):
+        return self.render()

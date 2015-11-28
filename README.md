@@ -10,12 +10,7 @@ This project uses nose for unit testing, but with no more Python libraries depen
 $ virtualenv --no-site-packages pyhaproxy
 $ source pyhaproxy/bin/activate
 ```
-* User pip or setuptools to install it
-```bash
-$ pip install pyhaproxy
-
-$ easy_install pyhaproxy
-```
+* User pip (`pip install pyhaproxy`) or setuptools (`easy_install pyhaproxy`) to install it
 * Install dependencies
 ```bash
 (pyhaproxy)$ pip install -r requirements.txt

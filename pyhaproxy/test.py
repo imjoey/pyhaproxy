@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pyhaproxy import parse
-from pyhaproxy import render
+import pyhaproxy.parse as parse
+import pyhaproxy.render as render
 
 
 class TestParse(object):

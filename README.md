@@ -12,7 +12,7 @@ $ virtualenv --no-site-packages pyhaproxy
 $ source pyhaproxy/bin/activate
 ```
 * User pip (`pip install pyhaproxy`) or setuptools (`easy_install pyhaproxy`) to install it
-* Install dependencies
+* Install nose dependency for unittest
 ```bash
 (pyhaproxy)$ pip install -r requirements.txt
 ```

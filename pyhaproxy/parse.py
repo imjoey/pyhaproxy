@@ -79,7 +79,9 @@ class Parser(object):
               'servers': list(config.Server),
               'binds': list(config.Bind),
               'acls': list(config.Acl),
-              'usebackends': list(config.UseBackend)
+              'usebackends': list(config.UseBackend),
+              'users': list(config.User),
+              'groups': list(config.Group),
             }:
                 the <configs, options, servers> in `config_block`
         """
@@ -104,6 +106,12 @@ class Parser(object):
             elif isinstance(line_node, pegnode.BackendLine):
                 config_block_dict['usebackends'].append(
                     self.__build_usebackend(line_node))
+            elif isinstance(line_node, pegnode.UserLine):
+                config_block_dict['users'].append(
+                    self.__build_user(line_node))
+            elif isinstance(line_node, pegnode.GroupLine):
+                config_block_dict['groups'].append(
+                    self.__build_group(line_node))
             else:
                 # may blank_line, comment_line
                 pass
@@ -125,7 +133,12 @@ class Parser(object):
 
     def build_userlist(self, userlist_node):
         """parse `userlist` sections, and return a config.Userlist"""
-        pass
+        proxy_name = userlist_node.userlist_header.proxy_name.text
+        config_block_dict = self.__build_config_block(
+            userlist_node.config_block)
+        return config.Userlist(
+            name=proxy_name,
+            config_block=config_block_dict)
 
     def build_listen(self, listen_node):
         """parse `listen` sections, and return a config.Listen
@@ -244,6 +257,22 @@ class Parser(object):
             operator=operator,
             backend_condition=usebackend_node.backend_condition.text,
             is_default=(backendtype == 'default_backend'))
+
+    def __build_user(self, user_node):
+        groups_fragment = user_node.groups_fragment.text
+        group_names = groups_fragment.split(',') if groups_fragment else []
+        return config.User(
+            name=user_node.user_name.text,
+            passwd=user_node.password.text,
+            passwd_type=user_node.passwd_type.text,
+            group_names=group_names)
+
+    def __build_group(self, group_node):
+        users_fragment = group_node.users_fragment.text
+        user_names = users_fragment.split(',') if users_fragment else []
+        return config.Group(
+            name=group_node.group_name.text,
+            user_names=user_names)
 
     def __read_string_from_file(self, filepath):
         filestring = ''

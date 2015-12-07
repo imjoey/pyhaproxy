@@ -132,14 +132,10 @@ class Userlist(HasConfigBlock):
 
     Attributes:
         name (str): Description
-        users (list(config.User)): Description
-        groups (list(config.Group)): Description
     """
-    def __init__(self, name, users, groups, config_block):
+    def __init__(self, name, config_block):
         super(Userlist, self).__init__(config_block)
         self.name = name
-        self.users = users
-        self.groups = groups
 
 
 class Server(object):
@@ -203,18 +199,18 @@ class User(object):
         name (str): Description
         passwd (str): Description
         passwd_type ('password' or 'insecure-password'): Description
-        groups (list): Description
+        group_names (list(str)): Description
     """
-    def __init__(self, name, passwd, passwd_type, groups):
+    def __init__(self, name, passwd, passwd_type, group_names):
         super(User, self).__init__()
         self.name = name
         self.passwd = passwd
         self.passwd_type = passwd_type
-        self.groups = groups or []
+        self.group_names = group_names or []
 
     def __str__(self):
-        if self.groups:
-            group_fragment = 'groups ' + ','.join(self.groups)
+        if self.group_names:
+            group_fragment = 'groups ' + ','.join(self.group_names)
         else:
             group_fragment = ''
         return '<user_line: user %s %s %s %s>' % (
@@ -226,16 +222,16 @@ class Group(object):
 
     Attributes:
         name (str): Description
-        users (list): Description
+        user_names (list(str)): Description
     """
-    def __init__(self, name, users):
+    def __init__(self, name, user_names):
         super(Group, self).__init__()
         self.name = name
-        self.users = users or []
+        self.user_names = user_names or []
 
     def __str__(self):
-        if self.users:
-            user_fragment = 'users ' + ', '.join(self.users)
+        if self.user_names:
+            user_fragment = 'users ' + ', '.join(self.user_names)
         else:
             user_fragment = ''
 

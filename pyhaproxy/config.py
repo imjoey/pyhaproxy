@@ -14,7 +14,13 @@ class Configuration(object):
         self.backends = []
         self.frontends = []
         self.listens = []
+        self.userlists = []
         self.globall = None
+
+    def userlist(self, name):
+        for userlist in self.userlists:
+            if userlist.name == name:
+                return userlist
 
     def listen(self, name):
         for listen in self.listens:
@@ -68,6 +74,22 @@ class HasConfigBlock(object):
             if a_acl.name == name:
                 return a_acl
 
+    def users(self):
+        return self.config_block['users']
+
+    def user(self, name):
+        for user in self.users():
+            if user.name == name:
+                return user
+
+    def groups(self):
+        return self.config_block['groups']
+
+    def group(self, name):
+        for group in self.groups():
+            if group.name == name:
+                return group
+
 
 class Global(HasConfigBlock):
     """Represens a `global` section
@@ -105,14 +127,29 @@ class Frontend(HasConfigBlock):
         self.port = port
 
 
+class Userlist(HasConfigBlock):
+    """Represents the `userlist` section
+
+    Attributes:
+        name (str): Description
+        users (list(config.User)): Description
+        groups (list(config.Group)): Description
+    """
+    def __init__(self, name, users, groups, config_block):
+        super(Userlist, self).__init__(config_block)
+        self.name = name
+        self.users = users
+        self.groups = groups
+
+
 class Server(object):
     """Represents the `server` line in config block
 
     Attributes:
-        attributes (list): Description
-        host (str): Description
         name (str): Description
+        host (str): Description
         port (str): Description
+        attributes (list): Description
     """
     def __init__(self, name, host, port, attributes):
         super(Server, self).__init__()
@@ -130,9 +167,9 @@ class Bind(object):
     """Represents the `bind` line in config block
 
     Attributes:
-        attributes (str):
         host (srt):
         port (list):
+        attributes (str):
     """
     def __init__(self, host, port, attributes):
         self.host = host
@@ -157,6 +194,52 @@ class Acl(object):
 
     def __str__(self):
         return '<acl_line: acl %s %s>' % (self.name, self.value)
+
+
+class User(object):
+    """Represents the `user` line in config block
+
+    Attributes:
+        name (str): Description
+        passwd (str): Description
+        passwd_type ('password' or 'insecure-password'): Description
+        groups (list): Description
+    """
+    def __init__(self, name, passwd, passwd_type, groups):
+        super(User, self).__init__()
+        self.name = name
+        self.passwd = passwd
+        self.passwd_type = passwd_type
+        self.groups = groups or []
+
+    def __str__(self):
+        if self.groups:
+            group_fragment = 'groups ' + ','.join(self.groups)
+        else:
+            group_fragment = ''
+        return '<user_line: user %s %s %s %s>' % (
+            self.name, self.passwd_type, self.passwd, group_fragment)
+
+
+class Group(object):
+    """Represents the `group` line in config block
+
+    Attributes:
+        name (str): Description
+        users (list): Description
+    """
+    def __init__(self, name, users):
+        super(Group, self).__init__()
+        self.name = name
+        self.users = users or []
+
+    def __str__(self):
+        if self.users:
+            user_fragment = 'users ' + ', '.join(self.users)
+        else:
+            user_fragment = ''
+
+        return '<group_line: group %s %s>' % (self.name, user_fragment)
 
 
 class UseBackend(object):

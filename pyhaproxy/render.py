@@ -17,6 +17,9 @@ class Render(object):
         # render defaults sections
         for defaults_section in self.configuration.defaults:
             config_str = config_str + self.render_defaults(defaults_section)
+        # render userlists sections
+        for userlist_section in self.configuration.userlists:
+            config_str = config_str + self.render_userlist(userlist_section)
         # render listen sections
         for listen_section in self.configuration.listens:
             config_str = config_str + self.render_listen(listen_section)
@@ -53,7 +56,15 @@ defaults %s
             defaults.config_block))
 
     def render_userlist(self, userlist):
-        return ''
+        userlist_str = '''
+userlist %s
+
+%s
+        '''
+
+        return userlist_str % (
+            userlist.name,
+            self.__render_config_block(userlist.config_block))
 
     def render_listen(self, listen):
         listen_str = '''
@@ -103,7 +114,9 @@ backend %s
               'servers': list(config.Server),
               'binds': list(config.Bind),
               'acls': list(config.Acl),
-              'usebackends': list(config.UseBackend)
+              'usebackends': list(config.UseBackend),
+              'users': list(config.User),
+              'groups': list(config.Group),
             }): Description
 
         Returns:
@@ -124,6 +137,10 @@ backend %s
                     line_str = self.__render_acl(line)
                 elif config_type == 'usebackends':
                     line_str = self.__render_usebackend(line)
+                elif config_type == 'users':
+                    line_str = self.__render_user(line)
+                elif config_type == 'groups':
+                    line_str = self.__render_group(line)
                 # append line str
                 config_block_str = config_block_str + line_str
 
@@ -133,11 +150,32 @@ backend %s
         usebackend_line = '''
 \t %s %s %s %s
 '''
-        backendtype = 'default_backend' if usebackend.is_default else 'use_backend'
+        backendtype = 'user_backend'
+        if usebackend.is_default:
+            backendtype = 'default_backend'
 
         return usebackend_line % (
             backendtype, usebackend.backend_name,
             usebackend.operator, usebackend.backend_condition)
+
+    def __render_user(self, user):
+        user_line = '''
+\t user %s %s %s %s
+        '''
+        group_fragment = ''
+        if user.group_names:
+            group_fragment = 'groups ' + ','.join(user.group_names)
+        return user_line % (
+            user.name, user.passwd_type, user.passwd, group_fragment)
+
+    def __render_group(self, group):
+        group_line = '''
+\t group %s %s
+        '''
+        user_fragment = ''
+        if group.user_names:
+            user_fragment = 'users ' + ','.join(group.user_names)
+        return group_line % (group.name, user_fragment)
 
     def __render_server(self, server):
         server_line = '''

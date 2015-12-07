@@ -52,6 +52,18 @@ class TestParse(object):
             print backend.options()
             print backend.configs()
 
+    def test_parse_userlist_section(self):
+        for userlist in self.configration.userlists:
+            print userlist.name
+            print 'groups:\n'
+            for group in userlist.groups():
+                print group.name
+                print group.user_names
+            print 'users:\n'
+            for user in userlist.users():
+                print user.name, '-', user.passwd, '-', user.passwd_type
+                print user.group_names
+
     def test_render(self):
         self.render = render.Render(self.configration)
         self.render.dumps_to(

@@ -64,7 +64,7 @@ group_name          <-      [a-zA-z0-9\-\_\.:]+
 
 user_name           <-      [a-zA-z0-9\-\_\.:]+
 
-password            <-      [^#\n]+
+password            <-      [^#\n ]+
 
 backend_condition   <-      [^#\n]+
 

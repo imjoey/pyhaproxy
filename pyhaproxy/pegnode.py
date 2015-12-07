@@ -238,7 +238,7 @@ class Grammar(object):
     REGEX_5 = re.compile('^[a-zA-z0-9\\-\\_\\.:]')
     REGEX_6 = re.compile('^[a-zA-z0-9\\-\\_\\.:]')
     REGEX_7 = re.compile('^[a-zA-z0-9\\-\\_\\.:]')
-    REGEX_8 = re.compile('^[^#\\n]')
+    REGEX_8 = re.compile('^[^#\\n ]')
     REGEX_9 = re.compile('^[^#\\n]')
     REGEX_10 = re.compile('^[:]')
     REGEX_11 = re.compile('^[\\d]')

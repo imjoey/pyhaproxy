@@ -25,11 +25,11 @@ Here is the simple example to show how to use it.
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-from haproxy.parse import Parser
-from haproxy.render import Render
+from pyhaproxy.parse import Parser
+from pyhaproxy.render import Render
 
 cfg_parser = Parser('haproxy.cfg')
-configration = cfg_parser.build_configration()
+configration = cfg_parser.build_configuration()
 
 # print global section
 print configration.globall
@@ -43,7 +43,7 @@ for frontend in configration.frontends:
     print frontend.options()
     print '-' * 30
 
-cfg_render = Render(self.configration)
+cfg_render = Render(configration)
 cfg_render.dumps_to('./hatest.cfg')  # you will see hatest.cfg which is same to the `haproxy.cfg` parsed previously
 
 ```

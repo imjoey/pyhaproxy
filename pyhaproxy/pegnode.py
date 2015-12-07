@@ -160,6 +160,7 @@ class GroupLine(TreeNode):
         self.whitespace = elements[4]
         self.group_name = elements[3]
         self.line_break = elements[8]
+        self.users_fragment = elements[6]
 
 
 class TreeNode19(TreeNode):
@@ -175,6 +176,8 @@ class UserLine(TreeNode):
         self.user_name = elements[3]
         self.password = elements[7]
         self.line_break = elements[12]
+        self.groups_fragment = elements[10]
+        self.passwd_type = elements[5]
 
 
 class TreeNode21(TreeNode):

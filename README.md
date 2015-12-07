@@ -19,7 +19,7 @@ $ source pyhaproxy/bin/activate
 
 
 # Example
-Here is the simple example to show how to use it.
+Here is the simple example to show how to use it. See unittest file [test.py](https://github.com/imjoey/pyhaproxy/blob/master/pyhaproxy/test.py) for more usage details.
 
 ```python
 #!/usr/bin/env python

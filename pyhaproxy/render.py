@@ -40,27 +40,24 @@ class Render(object):
     def render_global(self, globall):
         globall_str = '''
 global
-
 %s
-        '''
+'''
         return globall_str % self.__render_config_block(
             globall.config_block)
 
     def render_defaults(self, defaults):
         defaults_str = '''
 defaults %s
-
 %s
-        '''
+'''
         return defaults_str % (defaults.name, self.__render_config_block(
             defaults.config_block))
 
     def render_userlist(self, userlist):
         userlist_str = '''
 userlist %s
-
 %s
-        '''
+'''
 
         return userlist_str % (
             userlist.name,
@@ -69,9 +66,8 @@ userlist %s
     def render_listen(self, listen):
         listen_str = '''
 listen %s %s
-
 %s
-        '''
+'''
         host_port = ''
         if not bool(listen.config_block['binds']):
             host_port = '%s:%s' % (listen.host, listen.port)
@@ -84,9 +80,8 @@ listen %s %s
     def render_frontend(self, frontend):
         frontend_str = '''
 frontend %s %s
-
 %s
-        '''
+'''
         host_port = ''
         if not bool(frontend.config_block['binds']):
             host_port = '%s:%s' % (frontend.host, frontend.port)
@@ -97,11 +92,9 @@ frontend %s %s
 
     def render_backend(self, backend):
         backend_str = '''
-
 backend %s
-
 %s
-        '''
+'''
         return backend_str % (backend.name, self.__render_config_block(
             backend.config_block))
 
@@ -161,7 +154,7 @@ backend %s
     def __render_user(self, user):
         user_line = '''
 \t user %s %s %s %s
-        '''
+'''
         group_fragment = ''
         if user.group_names:
             group_fragment = 'groups ' + ','.join(user.group_names)
@@ -171,7 +164,7 @@ backend %s
     def __render_group(self, group):
         group_line = '''
 \t group %s %s
-        '''
+'''
         user_fragment = ''
         if group.user_names:
             user_fragment = 'users ' + ','.join(group.user_names)

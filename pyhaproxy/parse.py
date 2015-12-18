@@ -49,8 +49,7 @@ class Parser(object):
             elif isinstance(section_node, pegnode.BackendSection):
                 configuration.backends.append(
                     self.build_backend(section_node))
-            else:
-                raise Exception('Unsupported section')
+
         return configuration
 
     def build_global(self, global_node):

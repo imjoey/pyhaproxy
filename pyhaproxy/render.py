@@ -76,7 +76,6 @@ listen %s %s
             listen.name, host_port,
             self.__render_config_block(listen.config_block))
 
-
     def render_frontend(self, frontend):
         frontend_str = '''
 frontend %s %s

@@ -90,6 +90,9 @@ class HasConfigBlock(object):
             if group.name == name:
                 return group
 
+    def usebackends(self):
+        return self.config_block['usebackends']
+
 
 class Global(HasConfigBlock):
     """Represens a `global` section

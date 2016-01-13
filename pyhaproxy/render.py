@@ -142,7 +142,7 @@ backend %s
         usebackend_line = '''
 \t %s %s %s %s
 '''
-        backendtype = 'user_backend'
+        backendtype = 'use_backend'
         if usebackend.is_default:
             backendtype = 'default_backend'
 

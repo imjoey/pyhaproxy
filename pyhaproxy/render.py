@@ -139,9 +139,7 @@ backend %s
         return config_block_str
 
     def __render_usebackend(self, usebackend):
-        usebackend_line = '''
-\t %s %s %s %s
-'''
+        usebackend_line = '    %s %s %s %s\n'
         backendtype = 'use_backend'
         if usebackend.is_default:
             backendtype = 'default_backend'
@@ -151,9 +149,7 @@ backend %s
             usebackend.operator, usebackend.backend_condition)
 
     def __render_user(self, user):
-        user_line = '''
-\t user %s %s %s %s
-'''
+        user_line = '    user %s %s %s %s\n'
         group_fragment = ''
         if user.group_names:
             group_fragment = 'groups ' + ','.join(user.group_names)
@@ -161,42 +157,30 @@ backend %s
             user.name, user.passwd_type, user.passwd, group_fragment)
 
     def __render_group(self, group):
-        group_line = '''
-\t group %s %s
-'''
+        group_line = '    group %s %s\n'
         user_fragment = ''
         if group.user_names:
             user_fragment = 'users ' + ','.join(group.user_names)
         return group_line % (group.name, user_fragment)
 
     def __render_server(self, server):
-        server_line = '''
-\t server %s %s:%s %s
-'''
+        server_line = '    server %s %s:%s %s\n'
         return server_line % (
             server.name, server.host, server.port, ' '.join(server.attributes))
 
     def __render_acl(self, acl):
-        acl_line = '''
-\t acl %s %s
-'''
+        acl_line = '    acl %s %s\n'
         return acl_line % (acl.name, acl.value)
 
     def __render_bind(self, bind):
-        bind_line = '''
-\t bind %s:%s %s
-'''
+        bind_line = '    bind %s:%s %s\n'
         return bind_line % (
             bind.host, bind.port, ' '.join(bind.attributes))
 
     def __render_option(self, option):
-        option_line = '''
-\t option %s %s
-'''
+        option_line = '    option %s %s\n'
         return option_line % (option[0], option[1])
 
     def __render_config(self, config):
-        config_line = '''
-\t %s %s
-'''
+        config_line = '    %s %s\n'
         return config_line % (config[0], config[1])

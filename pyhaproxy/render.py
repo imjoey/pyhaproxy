@@ -165,14 +165,8 @@ backend %s
 
     def __render_server(self, server):
         server_line = '    server %s %s:%s %s\n'
-        attributes = []
-
-        #Strip out heading/trailing whitespace
-        for a in server.attributes:
-            attributes.append(a.strip())
-
         return server_line % (
-            server.name, server.host, server.port, ' '.join(attributes))
+            server.name, server.host, server.port, ' '.join(server.attributes))
 
     def __render_acl(self, acl):
         acl_line = '    acl %s %s\n'

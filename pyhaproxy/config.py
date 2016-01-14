@@ -150,12 +150,12 @@ class Server(object):
         port (str): Description
         attributes (list): Description
     """
-    def __init__(self, name, host, port, attributes):
+    def __init__(self, name, host, port, attributes=[]):
         super(Server, self).__init__()
         self.name = name
         self.host = host
         self.port = port
-        self.attributes = attributes or []
+        self.attributes = [attr.strip() for attr in attributes]
 
     def __str__(self):
         return '<server_line: %s %s:%s %s>' % (

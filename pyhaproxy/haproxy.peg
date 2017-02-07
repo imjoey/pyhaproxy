@@ -32,7 +32,7 @@ server_line         <-      whitespace "server" whitespace server_name whitespac
 
 option_line         <-      whitespace "option" whitespace keyword whitespace value? comment_text? line_break
 
-bind_line           <-      whitespace "bind" whitespace service_address whitespace value? comment_text? line_break
+bind_line           <-      whitespace "bind" whitespaceplus service_address whitespace value? comment_text? line_break
 
 acl_line            <-      whitespace "acl" whitespace acl_name whitespace value? comment_text? line_break
 
@@ -87,3 +87,5 @@ value               <-      [^#\n]+
 char                <-      ![\n] .
 
 whitespace          <-      [ \t]*
+
+whitespaceplus      <-      [ \t]+

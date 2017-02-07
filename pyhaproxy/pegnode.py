@@ -121,6 +121,7 @@ class OptionLine(TreeNode):
     def __init__(self, text, offset, elements):
         super(OptionLine, self).__init__(text, offset, elements)
         self.whitespace = elements[4]
+        self.whitespaceplus = elements[2]
         self.keyword = elements[3]
         self.line_break = elements[7]
         self.value = elements[5]
@@ -252,6 +253,7 @@ class Grammar(object):
     REGEX_18 = re.compile('^[^#\\n]')
     REGEX_19 = re.compile('^[\\n]')
     REGEX_20 = re.compile('^[ \\t]')
+    REGEX_21 = re.compile('^[ \\t]')
 
     def _read_configuration(self):
         address0, index0 = FAILURE, self._offset
@@ -1256,7 +1258,7 @@ class Grammar(object):
             if address2 is not FAILURE:
                 elements0.append(address2)
                 address3 = FAILURE
-                address3 = self._read_whitespace()
+                address3 = self._read_whitespaceplus()
                 if address3 is not FAILURE:
                     elements0.append(address3)
                     address4 = FAILURE
@@ -3037,6 +3039,39 @@ class Grammar(object):
             address0 = FAILURE
         self._cache['whitespace'][index0] = (address0, self._offset)
         return address0
+
+    def _read_whitespaceplus(self):
+        address0, index0 = FAILURE, self._offset
+        cached = self._cache['whitespaceplus'].get(index0)
+        if cached:
+            self._offset = cached[1]
+            return cached[0]
+        remaining0, index1, elements0, address1 = 1, self._offset, [], True
+        while address1 is not FAILURE:
+            chunk0 = None
+            if self._offset < self._input_size:
+                chunk0 = self._input[self._offset:self._offset + 1]
+            if chunk0 is not None and Grammar.REGEX_21.search(chunk0):
+                address1 = TreeNode(self._input[self._offset:self._offset + 1], self._offset)
+                self._offset = self._offset + 1
+            else:
+                address1 = FAILURE
+                if self._offset > self._failure:
+                    self._failure = self._offset
+                    self._expected = []
+                if self._offset == self._failure:
+                    self._expected.append('[ \\t]')
+            if address1 is not FAILURE:
+                elements0.append(address1)
+                remaining0 -= 1
+        if remaining0 <= 0:
+            address0 = TreeNode(self._input[index1:self._offset], index1, elements0)
+            self._offset = self._offset
+        else:
+            address0 = FAILURE
+        self._cache['whitespaceplus'][index0] = (address0, self._offset)
+        return address0
+
 
 
 class Parser(Grammar):

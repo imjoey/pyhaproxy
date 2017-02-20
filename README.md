@@ -98,21 +98,21 @@ cfg_render.dumps_to('./hatest.cfg')  # you will see hatest.cfg which is same to 
 
 
 # Finished
-- [x] ~~Parse `global` section~~
-- [x] ~~Parse `frontend` sections~~
-- [x] ~~Parse `bind` config lines~~
-- [x] ~~Parse `backend` sections~~
-- [x] ~~Parse `defaults` sections~~
-- [x] ~~Parse `userlist` sections~~
-- [x] ~~Parse `listen` sections~~
-- [x] ~~Parse `acl` config lines~~
-- [x] ~~Parse `use_backend` and `default_backend` config lines~~
-- [x] ~~Render `global` section~~
-- [x] ~~Render `frontend` section~~
-- [x] ~~Render `backend` sections~~
-- [x] ~~Render `defaults` sections~~
-- [x] ~~Render `userlist` sections~~
-- [x] ~~Render `listen` sections~~
+- [x] Parse `global` section
+- [x] Parse `frontend` sections
+- [x] Parse `bind` config lines
+- [x] Parse `backend` sections
+- [x] Parse `defaults` sections
+- [x] Parse `userlist` sections
+- [x] Parse `listen` sections
+- [x] Parse `acl` config lines
+- [x] Parse `use_backend` and `default_backend` config lines
+- [x] Render `global` section
+- [x] Render `frontend` section
+- [x] Render `backend` sections
+- [x] Render `defaults` sections
+- [x] Render `userlist` sections
+- [x] Render `listen` sections
 
 
 # TODO

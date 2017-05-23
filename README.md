@@ -27,6 +27,8 @@ Here is the simple example to show how to use it. See unittest file [test.py](ht
 
 from pyhaproxy.parse import Parser
 from pyhaproxy.render import Render
+import pyhaproxy.config as config
+
 
 # Build the configuration instance by calling Parser('config_file').build_configuration()
 cfg_parser = Parser('haproxy.cfg')
@@ -60,10 +62,17 @@ the_fe_section = configuration.frontend(the_fe_section_name)
 
 # Get all the ACLs defined in the frontend section
 acls = the_fe_section.acls()   # return list(config.Acl)
+
 # Find the specified ACL
 acl_instance = the_fe_section.acl(the_acl_name)   # return config.Acl
-the_fe_section.acls().append(config.ACL(acl_name, acl_value))  # append the ACL into the frontend section
 
+# Modify existing ACL
+acl_instance.value = 'hdr(host) -i modified.example.com'
+the_fe_section.acls().append(config.Acl(acl_name, acl_value))  # append the ACL into the frontend section
+
+# Remove ACL
+acl_instance = the_fe_section.acl(the_acl_name)   # return config.Acl
+the_fe_section.acls().remove(acl_instance)
 
 # Operates the use_backend / default_backend configs in a frontend
 
@@ -71,7 +80,7 @@ the_fe_section.acls().append(config.ACL(acl_name, acl_value))  # append the ACL 
 usebackends = the_fe_section.usebackends()  # return list(config.UseBackend)
 for usebe in usebackends:
     # Get the using backend name, operator, condition
-    print usebe.backend_name, usebe.operator, backend_condition
+    print usebe.backend_name, usebe.operator, usebe.backend_condition
     # Determine if it's `default_backend` line
     print usebe.is_default
 # Add a new `use_backend` or `default_backend` line

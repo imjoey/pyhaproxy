@@ -1,0 +1,11 @@
+language: python
+
+before_install:
+  - sudo apt-get -y install python-pip
+
+install:
+  - sudo pip install -r requirements.txt
+
+script:
+  - sudo python setup.py install
+  - nosetests -sv pyhaproxy/test.py

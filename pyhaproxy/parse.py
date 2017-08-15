@@ -12,13 +12,17 @@ class Parser(object):
     """Do parsing the peg-tree and build the objects in config module
 
     Attributes:
+        filepath (str): the absolute path of haproxy config file
         filestring (str): the content of haproxy config file
         pegtree (config.TreeNode): pegtree object for input filestring
     """
-    def __init__(self, filepath='/etc/haproxy/haproxy.cfg'):
-        self.filestring = self.__read_string_from_file(filepath)
-        if not self.filestring:
-            raise Exception('error reading from file %s' % filepath)
+    def __init__(self, filepath='/etc/haproxy/haproxy.cfg', filestring=None):
+        if filestring:
+            self.filestring = filestring
+        elif filepath:
+            self.filestring = self.__read_string_from_file(filepath)
+        else:
+            raise Exception('please validate your input')
 
     def build_configuration(self):
         """Parse the haproxy config file

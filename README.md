@@ -1,4 +1,4 @@
-# Pyhaproxy
+# Pyhaproxy   ![Build Status](https://travis-ci.org/imjoey/pyhaproxy.svg?branch=master)
 It's a Python library to parse haproxy config file. Thanks to [canopy](https://github.com/jcoglan/canopy), which I use for auto-generating Python codes by PEG grammar. But the 'Extension methods for node' feature in canopy seems broken, I always encounter the MRO errors when running `parse` function. So I modify the generated codes which mainly rename the `TreeNode*` to specified treenode name, eg: GlobalSection, GlobalHeader, BackendHeader, and also complement missing attributes.
 
 

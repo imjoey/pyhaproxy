@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyhaproxy',
-    version='0.2.2',
+    version='0.2.4',
     keywords=('haproxy', 'parse'),
     description='A Python library to parse haproxy configuration file',
     license='MIT License',

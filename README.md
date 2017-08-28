@@ -60,43 +60,60 @@ the_fe_section = configuration.frontend(the_fe_section_name)
 
 # Operates the ACL in a frontend, it much likes operating a list
 
-# Get all the ACLs defined in the frontend section
+#   Get all the ACLs defined in the frontend section
 acls = the_fe_section.acls()   # return list(config.Acl)
 
-# Find the specified ACL
+#   Find the specified ACL
 acl_instance = the_fe_section.acl(the_acl_name)   # return config.Acl
 
-# Modify existing ACL
+#   Modify existing ACL
 acl_instance.value = 'hdr(host) -i modified.example.com'
-the_fe_section.acls().append(config.Acl(acl_name, acl_value))  # append the ACL into the frontend section
 
-# Remove ACL
-acl_instance = the_fe_section.acl(the_acl_name)   # return config.Acl
+#   Append the ACL into the frontend section
+#       for version <= 0.2.4
+the_fe_section.acls().append(config.Acl(acl_name, acl_value))
+#       for version > 0.2.4
+the_fe_section.add_acl(config.Acl(acl_name, acl_value))        
+
+#   Remove ACL
+#       for version <= 0.2.4
+acl_instance = the_fe_section.acl(the_acl_name)
 the_fe_section.acls().remove(acl_instance)
+#       for version > 0.2.4
+the_fe_section.remove_acl(the_acl_name)           
+
 
 # Operates the use_backend / default_backend configs in a frontend
 
-# Get all the backend configs
+#   Get all the backend configs
 usebackends = the_fe_section.usebackends()  # return list(config.UseBackend)
 for usebe in usebackends:
     # Get the using backend name, operator, condition
     print usebe.backend_name, usebe.operator, usebe.backend_condition
     # Determine if it's `default_backend` line
     print usebe.is_default
-# Add a new `use_backend` or `default_backend` line
+#   Add a new `use_backend` or `default_backend` line
+#       for version <= 0.2.4
 the_fe_section.usebackends().append(config.UseBackend(backend_name, operator, backend_condition, is_default))
+#       for version > 0.2.4
+the_fe_section.add_usebackend(config.UseBackend(backend_name, operator, backend_condition, is_default))
 
 
 # Operates the Server in a backend
 the_be_section = configuration.backend(the_be_section_name)
-# Get all the Server lines in backend section
+#   Get all the Server lines in backend section
 servers = the_be_section.servers()  # return list(config.Server)
-# Find the specified Server
+#   Find the specified Server
 the_server = the_be_section.server(the_server_name)  # return config.Server
-# Get the Server name, host, port
+#   Get the Server name, host, port
 print the_server.name, the_server.host, the_server.port
-# Get the Server attributes, for line: `server web_server_1 10.1.1.2:80 cookie 1 check inter 2000 rise 3`
+#   Get the Server attributes, for line: `server web_server_1 10.1.1.2:80 cookie 1 check inter 2000 rise 3`
 print the_server.attributes  # it's is ['cookie', 1, 'check', 'inter', 2000, 'rise', 3]
+#   Remove the Server by name
+#       for version <= 0.2.4
+the_be_section.servers().remove(the_server)
+#       for version > 0.2.4
+the_be_section.remove_server(server_name)
 
 
 # Render out to the cfg file

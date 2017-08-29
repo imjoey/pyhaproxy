@@ -3,6 +3,7 @@
 
 import pyhaproxy.parse as parse
 import pyhaproxy.render as render
+import pyhaproxy.config as config
 
 
 class TestParse(object):
@@ -194,7 +195,12 @@ backend swiftnifty
                 print user.name, '-', user.passwd, '-', user.passwd_type
                 print user.group_names
 
-    def test_render(self):
+    def test_update_config_block(self):
+        backend = self.configration.backend('chatleap')
+        new_server = config.Server('newly1', '8.8.8.8', 1234)
+        backend.add_server(new_server)
+        server1 = backend.server('server1')
+        server1.name = 'server2'
+        backend.add_config(config.Config('conf_key_1', 'conf_key_2'))
         self.render = render.Render(self.configration)
-        self.render.dumps_to(
-            './hatest.cfg')
+        self.render.dumps_to('./hatest.cfg')

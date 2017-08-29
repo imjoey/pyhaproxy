@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pyhaproxy.config as config
+
 
 class Render(object):
     """Do rendering the config.Config object to a str
@@ -12,8 +14,10 @@ class Render(object):
         self.configuration = configuration
 
     def render_configuration(self):
+        config_str = ''
         # render global section
-        config_str = self.render_global(self.configuration.globall)
+        if self.configuration.globall:
+            config_str = self.render_global(self.configuration.globall)
         # render defaults sections
         for defaults_section in self.configuration.defaults:
             config_str = config_str + self.render_defaults(defaults_section)
@@ -82,7 +86,7 @@ frontend %s %s
 %s
 '''
         host_port = ''
-        if not bool(frontend.config_block['binds']):
+        if len(frontend.binds()) == 0:
             host_port = '%s:%s' % (frontend.host, frontend.port)
 
         return frontend_str % (
@@ -101,40 +105,31 @@ backend %s
         """Summary
 
         Args:
-            config_block ({'configs': list(tuple),
-              'options': list(tuple),
-              'servers': list(config.Server),
-              'binds': list(config.Bind),
-              'acls': list(config.Acl),
-              'usebackends': list(config.UseBackend),
-              'users': list(config.User),
-              'groups': list(config.Group),
-            }): Description
+            config_block [config.Item, ...]: config lines
 
         Returns:
             str: config block str
         """
         config_block_str = ''
-        for config_type, line_list in config_block.iteritems():
-            for line in line_list:
-                if config_type == 'options':
-                    line_str = self.__render_option(line)
-                elif config_type == 'configs':
-                    line_str = self.__render_config(line)
-                elif config_type == 'servers':
-                    line_str = self.__render_server(line)
-                elif config_type == 'binds':
-                    line_str = self.__render_bind(line)
-                elif config_type == 'acls':
-                    line_str = self.__render_acl(line)
-                elif config_type == 'usebackends':
-                    line_str = self.__render_usebackend(line)
-                elif config_type == 'users':
-                    line_str = self.__render_user(line)
-                elif config_type == 'groups':
-                    line_str = self.__render_group(line)
-                # append line str
-                config_block_str = config_block_str + line_str
+        for line in config_block:
+            if isinstance(line, config.Option):
+                line_str = self.__render_option(line)
+            elif isinstance(line, config.Config):
+                line_str = self.__render_config(line)
+            elif isinstance(line, config.Server):
+                line_str = self.__render_server(line)
+            elif isinstance(line, config.Bind):
+                line_str = self.__render_bind(line)
+            elif isinstance(line, config.Acl):
+                line_str = self.__render_acl(line)
+            elif isinstance(line, config.UseBackend):
+                line_str = self.__render_usebackend(line)
+            elif isinstance(line, config.User):
+                line_str = self.__render_user(line)
+            elif isinstance(line, config.Group):
+                line_str = self.__render_group(line)
+            # append line str
+            config_block_str = config_block_str + line_str
 
         return config_block_str
 
@@ -179,8 +174,8 @@ backend %s
 
     def __render_option(self, option):
         option_line = '    option %s %s\n'
-        return option_line % (option[0], option[1])
+        return option_line % (option.keyword, option.value)
 
     def __render_config(self, config):
         config_line = '    %s %s\n'
-        return config_line % (config[0], config[1])
+        return config_line % (config.keyword, config.value)

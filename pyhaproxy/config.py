@@ -49,49 +49,153 @@ class HasConfigBlock(object):
         super(HasConfigBlock, self).__init__()
         self.config_block = config_block
 
+    def __find_configs(self, config_type):
+        configs = []
+        for line in self.config_block:
+            if isinstance(line, config_type):
+                configs.append(line)
+        return configs
+
+    def __add_node(self, node, node_type):
+        if not isinstance(node, node_type):
+            raise Exception('config.%s is only supported' % node_type)
+        self.config_block.append(node)
+
     def options(self):
-        return self.config_block['options']
+        return self.__find_configs(Option)
+
+    def option(self, keyword, value):
+        for line in self.config_block:
+            if isinstance(line, Option):
+                if line.keyword == keyword and line.value == value:
+                    return line
+
+    def add_option(self, option):
+        self.__add_node(option, Option)
+
+    def remove_option(self, keyword, value):
+        option = self.option(keyword, value)
+        if option:
+            self.config_block.remove(option)
 
     def configs(self):
-        return self.config_block['configs']
+        return self.__find_configs(Config)
+
+    def config(self, keyword, value):
+        for line in self.config_block:
+            if isinstance(line, Config):
+                if line.keyword == keyword and line.value == value:
+                    return line
+
+    def add_config(self, config):
+        self.__add_node(config, Config)
+
+    def remove_config(self, keyword, value):
+        config = self.config(keyword, value)
+        if config:
+            self.config_block.remove(config)
 
     def servers(self):
-        return self.config_block['servers']
+        return self.__find_configs(Server)
 
     def server(self, name):
-        for a_server in self.servers():
-            if a_server.name == name:
-                return a_server
+        for line in self.config_block:
+            if isinstance(line, Server):
+                if line.name == name:
+                    return line
+
+    def add_server(self, server):
+        self.__add_node(server, Server)
+
+    def remove_server(self, name):
+        server = self.server(name)
+        if server:
+            self.config_block.remove(server)
 
     def binds(self):
-        return self.config_block['binds']
+        return self.__find_configs(Bind)
+
+    def bind(self, host, port):
+        for line in self.config_block:
+            if isinstance(line, Bind):
+                if line.host == host and line.port == port:
+                    return line
+
+    def add_bind(self, bind):
+        self.__add_node(bind, Bind)
+
+    def remove_bind(self, host, port):
+        bind = self.bind(host, port)
+        if bind:
+            self.config_block.remove(bind)
 
     def acls(self):
-        return self.config_block['acls']
+        return self.__find_configs(Acl)
 
     def acl(self, name):
-        for a_acl in self.acls():
-            if a_acl.name == name:
-                return a_acl
+        for line in self.config_block:
+            if isinstance(line, Acl):
+                if line.name == name:
+                    return line
+
+    def add_acl(self, acl):
+        self.__add_node(acl, Acl)
+
+    def remove_acl(self, name):
+        acl = self.acl(name)
+        if acl:
+            self.config_block.remove(acl)
 
     def users(self):
-        return self.config_block['users']
+        return self.__find_configs(User)
 
     def user(self, name):
-        for user in self.users():
-            if user.name == name:
-                return user
+        for line in self.config_block:
+            if isinstance(line, User):
+                if line.name == name:
+                    return line
+
+    def add_user(self, user):
+        self.__add_node(user, User)
+
+    def remove_user(self, name):
+        user = self.user(name)
+        if user:
+            self.config_block.remove(user)
 
     def groups(self):
-        return self.config_block['groups']
+        return self.__find_configs(Group)
 
     def group(self, name):
-        for group in self.groups():
-            if group.name == name:
-                return group
+        for line in self.config_block:
+            if isinstance(line, Group):
+                if line.name == name:
+                    return line
+
+    def add_group(self, group):
+        self.__add_node(group, Group)
+
+    def remove_group(self, name):
+        group = self.group(name)
+        if group:
+            self.config_block.remove(group)
 
     def usebackends(self):
-        return self.config_block['usebackends']
+        return self.__find_configs(UseBackend)
+
+    def usebackend(self, name):
+        for line in self.config_block:
+            if isinstance(line, UseBackend):
+                if line.backend_name == name:
+                    return line
+
+    def add_usebackend(self, usebackend):
+        self.__add_node(usebackend, UseBackend)
+
+    def remove_usebackend(self, name):
+        usebackend = self.usebackend(name)
+        if usebackend:
+            self.config_block.remove(usebackend)
 
 
 class Global(HasConfigBlock):
@@ -160,6 +264,38 @@ class Server(object):
     def __str__(self):
         return '<server_line: %s %s:%s %s>' % (
             self.name, self.host, self.port, ' '.join(self.attributes))
+
+
+class Config(object):
+    """Represents the `config` line in config block
+
+    Attributes:
+        keyword (srt):
+        value (str):
+    """
+    def __init__(self, keyword, value):
+        self.keyword = keyword
+        self.value = value
+
+    def __str__(self):
+        return '<config_line: config %s %s>' % (
+            self.keyword, self.value)
+
+
+class Option(object):
+    """Represents the `option` line in config block
+
+    Attributes:
+        keyword (srt):
+        value (str):
+    """
+    def __init__(self, keyword, value):
+        self.keyword = keyword
+        self.value = value
+
+    def __str__(self):
+        return '<option_line: option %s %s>' % (
+            self.key, self.value)
 
 
 class Bind(object):

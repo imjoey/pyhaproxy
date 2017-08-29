@@ -13,7 +13,6 @@ class Parser(object):
     Attributes:
         filepath (str): the absolute path of haproxy config file
         filestring (str): the content of haproxy config file
-        pegtree (config.TreeNode): pegtree object for input filestring
     """
     def __init__(self, filepath='/etc/haproxy/haproxy.cfg', filestring=None):
         if filestring:
@@ -32,9 +31,9 @@ class Parser(object):
         Returns:
             config.Configuration: haproxy config object
         """
-        self.pegtree = pegnode.parse(self.filestring)
-        configuration = config.Configuration(self.pegtree)
-        for section_node in self.pegtree:
+        configuration = config.Configuration()
+        pegtree = pegnode.parse(self.filestring)
+        for section_node in pegtree:
             if isinstance(section_node, pegnode.GlobalSection):
                 configuration.globall = self.build_global(section_node)
             elif isinstance(section_node, pegnode.FrontendSection):

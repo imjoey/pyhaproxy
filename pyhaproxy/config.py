@@ -6,39 +6,66 @@ class Configuration(object):
     """Represents a whole haproxy config file
 
     Attributes:
-        pegtree (TreeNode): the original parsing pegtree
+
     """
-    def __init__(self, pegtree):
-        self.pegtree = pegtree
-        self.defaults = []
-        self.backends = []
-        self.frontends = []
-        self.listens = []
-        self.userlists = []
-        self.globall = None
+    def __init__(self):
+        self.__defaults = []
+        self.__backends = []
+        self.__frontends = []
+        self.__listens = []
+        self.__userlists = []
+        self.__globall = None
+
+    @property
+    def globall(self):
+        return self.__globall
+
+    @globall.setter
+    def globall(self, globall):
+        self.__globall = globall
+
+    @property
+    def userlists(self):
+        return self.__userlists
 
     def userlist(self, name):
-        for userlist in self.userlists:
+        for userlist in self.__userlists:
             if userlist.name == name:
                 return userlist
 
+    @property
+    def listens(self):
+        return self.__listens
+
     def listen(self, name):
-        for listen in self.listens:
+        for listen in self.__listens:
             if listen.name == name:
                 return listen
 
+    @property
+    def defaults(self):
+        return self.__defaults
+
     def default(self, name):
-        for default in self.defaults:
+        for default in self.__defaults:
             if default.name == name:
                 return default
 
+    @property
+    def backends(self):
+        return self.__backends
+
     def backend(self, name):
-        for backend in self.backends:
+        for backend in self.__backends:
             if backend.name == name:
                 return backend
 
+    @property
+    def frontends(self):
+        return self.__frontends
+
     def frontend(self, name):
-        for frontend in self.frontends:
+        for frontend in self.__frontends:
             if frontend.name == name:
                 return frontend
 

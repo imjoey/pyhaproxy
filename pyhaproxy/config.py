@@ -322,7 +322,7 @@ class Option(object):
 
     def __str__(self):
         return '<option_line: option %s %s>' % (
-            self.key, self.value)
+            self.keyword, self.value)
 
 
 class Bind(object):

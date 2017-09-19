@@ -3109,11 +3109,3 @@ def format_error(input, offset, expected):
 def parse(input, actions=None, types=None):
     parser = Parser(input, actions, types)
     return parser.parse()
-
-
-if __name__ == '__main__':
-    with open('haproxy.cfg') as f:
-        filestring = f.read()
-        tree = parse(filestring)
-        for ele in tree.elements:
-            print ele.offset, ele.text

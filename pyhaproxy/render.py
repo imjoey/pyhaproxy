@@ -39,7 +39,6 @@ class Render(object):
     def dumps_to(self, filepath):
         with open(filepath, 'w') as f:
             f.write(self.render_configuration())
-        print 'write configs into %s succeed' % filepath
 
     def render_global(self, globall):
         globall_str = '''

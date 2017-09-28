@@ -72,7 +72,7 @@ listen %s %s
 %s
 '''
         host_port = ''
-        if not bool(listen.config_block['binds']):
+        if not len(listen.binds()):
             host_port = '%s:%s' % (listen.host, listen.port)
 
         return listen_str % (
@@ -85,7 +85,7 @@ frontend %s %s
 %s
 '''
         host_port = ''
-        if len(frontend.binds()) == 0:
+        if not len(frontend.binds()):
             host_port = '%s:%s' % (frontend.host, frontend.port)
 
         return frontend_str % (

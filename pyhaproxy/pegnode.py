@@ -1055,8 +1055,8 @@ class Grammar(object):
             address2 = FAILURE
             chunk0 = None
             if self._offset < self._input_size:
-                chunk0 = self._input[self._offset:self._offset + 6]
-            if chunk0 == 'server':
+                chunk0 = self._input[self._offset:self._offset + 7]
+            if chunk0 == 'server ':
                 address2 = TreeNode(self._input[self._offset:self._offset + 6], self._offset)
                 self._offset = self._offset + 6
             else:
